@@ -14,9 +14,9 @@ jobs:
       matrix:
         include:
           - java: 8
-            additional-maven-args-java8: "-Pjacoco -DrepoToken=$COVERALLS_REPO_TOKEN coveralls:report"
+            additional-maven-args-java8: "verify -Pjacoco -DrepoToken=$COVERALLS_REPO_TOKEN coveralls:report"
           - java: 11
-            additional-maven-args-java11: "-Pjacoco sonar:sonar -Dsonar.projectKey=lore1379_SimpleShopCart"
+            additional-maven-args-java11: "verify -Pjacoco sonar:sonar -Dsonar.projectKey=lore1379_SimpleShopCart"
           
     name: Build with Java ${{ matrix.java }} on Linux
     steps:
@@ -40,11 +40,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
-          xvfb-run mvn verify ${{ matrix.additional-maven-args-java11 }}
+          xvfb-run mvn ${{ matrix.additional-maven-args-java11 }}
         working-directory: ${{ env.workdir }}
       - name: Build with Maven send to CoverAlls
         run: >
-          mvn verify ${{ matrix.additional-maven-args-java8 }}
+          xvfb-run mvn ${{ matrix.additional-maven-args-java8 }}
         working-directory: ${{ env.workdir }}
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
