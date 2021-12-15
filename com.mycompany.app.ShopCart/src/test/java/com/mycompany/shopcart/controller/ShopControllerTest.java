@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -22,10 +23,10 @@ public class ShopControllerTest {
 	private ProductRepository productRepository;
 	
 	@Mock
-	private ShopController shopController;
-	
-	@Mock
 	private ProductView productView;
+	
+	@InjectMocks
+	private ShopController shopController;
 	
 	private AutoCloseable closeable;
 	
