@@ -44,7 +44,7 @@ public class ShopControllerTest {
 		List<Product> products = asList(new Product());
 		when(productRepository.findAll())
 			.thenReturn(products);
-		shopController.allStudents();
+		shopController.allProducts();
 		verify(productView).showAllProducts(products);
 	}
 
