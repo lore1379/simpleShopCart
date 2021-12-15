@@ -1,9 +1,5 @@
-package com.mycompany.app.ShopCart;
+package com.mycompany.shopcart.app;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
     public static void main( String[] args )
