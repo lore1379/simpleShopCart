@@ -10,4 +10,6 @@ public interface ProductRepository {
 
 	public Product findById(String id);
 
+	public void delete(String id);
+
 }

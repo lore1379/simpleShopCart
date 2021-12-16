@@ -72,9 +72,18 @@ public class ShopControllerTest {
 	@Test
 	public void testRemoveProduct() {
 		Product productToRemove = new Product("1", "test");
-		when(productRepository.findById("1")).thenReturn(productToRemove);
 		shopController.removeProduct(productToRemove);
 		verify(productView).removeProductFromCart(productToRemove);
+	}
+	
+	@Test
+	public void testCheckoutProductsWhenOneProductAreInDatabase() {
+		Product product1 = new Product("1", "test1");
+		when(productRepository.findById("1")).thenReturn(product1);
+		shopController.checkoutProducts();
+		verify(productRepository).delete("1");
+		verify(productView).removeProductFromCart(product1);
+		verify(productView).removeProductFromShop(product1);
 	}
 
 }
