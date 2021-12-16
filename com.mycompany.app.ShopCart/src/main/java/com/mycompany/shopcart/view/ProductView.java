@@ -12,4 +12,6 @@ public interface ProductView {
 
 	void removeProductFromCart(Product productToRemove);
 
+	void showError(String string);
+
 }

@@ -1,7 +1,9 @@
 package com.mycompany.shopcart.controller;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Mockito.ignoreStubs;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -50,12 +52,21 @@ public class ShopControllerTest {
 	}
 	
 	@Test
-	public void testBuyProduct() {
+	public void testBuyProductWhenProductIsInDatabase() {
 		Product productToBuy = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(productToBuy);
 		shopController.buyProduct(productToBuy);
 		verify(productView).addProductToCart(productToBuy);
 
+	}
+	
+	@Test
+	public void testBuyProductWhenProductIsNotInDatabase() {
+		Product productToBuy = new Product("1", "test");
+		when(productRepository.findById("1")).thenReturn(null);
+		shopController.buyProduct(productToBuy);
+		verify(productView).showError("The product you are trying to buy is no longer available");
+		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 	
 	@Test
