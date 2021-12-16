@@ -54,8 +54,16 @@ public class ShopControllerTest {
 		Product productToBuy = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(productToBuy);
 		shopController.buyProduct(productToBuy);
-		verify(productView).showCartProducts(productToBuy);
+		verify(productView).addProductToCart(productToBuy);
 
+	}
+	
+	@Test
+	public void testRemoveProduct() {
+		Product productToRemove = new Product("1", "test");
+		when(productRepository.findById("1")).thenReturn(productToRemove);
+		shopController.removeProduct(productToRemove);
+		verify(productView).removeProductFromCart(productToRemove);
 	}
 
 }

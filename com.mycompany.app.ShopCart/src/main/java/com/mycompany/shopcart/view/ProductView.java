@@ -8,6 +8,8 @@ public interface ProductView {
 
 	void showAllProducts(List<Product> products);
 
-	void showCartProducts(Product productToBuy);
+	void addProductToCart(Product productToBuy);
+
+	void removeProductFromCart(Product productToRemove);
 
 }

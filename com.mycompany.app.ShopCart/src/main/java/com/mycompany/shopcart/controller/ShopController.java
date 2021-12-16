@@ -19,7 +19,12 @@ public class ShopController {
 	}
 
 	public void buyProduct(Product productToBuy) {
-		productView.showCartProducts(productRepository.findById(productToBuy.getId()));		
+		productView.addProductToCart(productRepository.findById(productToBuy.getId()));		
+	}
+
+	public void removeProduct(Product productToRemove) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
