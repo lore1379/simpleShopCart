@@ -34,11 +34,12 @@ public class ShopController {
 	}
 
 	public void checkoutProducts(List<Product> productsInCart) {
-		Product product = productsInCart.get(0);
-		Product existingProduct = productRepository.findById(product.getId());
-		productRepository.delete(existingProduct.getId());
-		productView.removeProductFromCart(existingProduct);
-		productView.removeProductFromShop(existingProduct);
+		for (Product product : productsInCart) {
+			Product existingProduct = productRepository.findById(product.getId());
+			productRepository.delete(existingProduct.getId());
+			productView.removeProductFromCart(existingProduct);
+			productView.removeProductFromShop(existingProduct);
+		}
 	}
 
 }
