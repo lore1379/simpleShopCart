@@ -48,5 +48,14 @@ public class ShopControllerTest {
 		shopController.allProducts();
 		verify(productView).showAllProducts(products);
 	}
+	
+	@Test
+	public void testBuyProduct() {
+		Product productToBuy = new Product("1", "test");
+		when(productRepository.findById("1")).thenReturn(productToBuy);
+		shopController.buyProduct(productToBuy);
+		verify(productView).showCartProducts(productToBuy);
+
+	}
 
 }

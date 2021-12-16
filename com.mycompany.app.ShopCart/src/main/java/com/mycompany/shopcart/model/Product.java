@@ -6,15 +6,13 @@ public class Product {
 	
 	private String id;
 	private String name;
-	private Integer stock;
 
 	public Product() {
 	}
 
-	public Product(String id, String name, Integer stock) {
+	public Product(String id, String name) {
 		this.id = id;
 		this.name = name;
-		this.setStock(stock);
 	}
 
 	public String getId() {
@@ -33,14 +31,6 @@ public class Product {
 		this.name = name;
 	}
 	
-	public Integer getStock() {
-		return stock;
-	}
-	
-	public void setStock(Integer stock) {
-		this.stock = stock;
-	}
-	
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + "]";
@@ -48,7 +38,7 @@ public class Product {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, name, stock);
+		return Objects.hash(id, name);
 	}
 
 	@Override
@@ -63,8 +53,7 @@ public class Product {
 			return false;
 		}
 		Product other = (Product) obj;
-		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(stock, other.stock);
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name);
 	}
 
 

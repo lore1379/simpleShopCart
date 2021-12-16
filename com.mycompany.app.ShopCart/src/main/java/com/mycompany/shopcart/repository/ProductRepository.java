@@ -8,4 +8,6 @@ public interface ProductRepository {
 
 	public List<Product> findAll();
 
+	public Product findById(String id);
+
 }
