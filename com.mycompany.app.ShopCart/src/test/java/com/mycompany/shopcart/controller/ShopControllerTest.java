@@ -77,13 +77,16 @@ public class ShopControllerTest {
 	}
 	
 	@Test
-	public void testCheckoutProductsWhenOneProductAreInDatabase() {
-		Product product1 = new Product("1", "test1");
-		when(productRepository.findById("1")).thenReturn(product1);
-		shopController.checkoutProducts();
+	public void testCheckoutProductsWhenOneProductIsInDatabase() {
+		Product product = new Product("1", "test1");
+		List<Product> productsInCart = asList(product);
+		when(productRepository.findById("1")).thenReturn(product);
+		shopController.checkoutProducts(productsInCart);
 		verify(productRepository).delete("1");
-		verify(productView).removeProductFromCart(product1);
-		verify(productView).removeProductFromShop(product1);
+		verify(productView).removeProductFromCart(product);
+		verify(productView).removeProductFromShop(product);
 	}
+	
+
 
 }

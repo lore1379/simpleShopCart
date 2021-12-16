@@ -1,5 +1,7 @@
 package com.mycompany.shopcart.controller;
 
+import java.util.List;
+
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.ProductRepository;
 import com.mycompany.shopcart.view.ProductView;
@@ -31,9 +33,12 @@ public class ShopController {
 		productView.removeProductFromCart(productToRemove);
 	}
 
-	public void checkoutProducts() {
-		// TODO Auto-generated method stub
-		
+	public void checkoutProducts(List<Product> productsInCart) {
+		Product product = productsInCart.get(0);
+		Product existingProduct = productRepository.findById(product.getId());
+		productRepository.delete(existingProduct.getId());
+		productView.removeProductFromCart(existingProduct);
+		productView.removeProductFromShop(existingProduct);
 	}
 
 }
