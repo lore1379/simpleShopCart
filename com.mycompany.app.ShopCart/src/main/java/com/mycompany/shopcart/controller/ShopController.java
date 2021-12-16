@@ -23,8 +23,7 @@ public class ShopController {
 	}
 
 	public void removeProduct(Product productToRemove) {
-		// TODO Auto-generated method stub
-		
+		productView.removeProductFromCart(productRepository.findById(productToRemove.getId()));
 	}
 
 }
