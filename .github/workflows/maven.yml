@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      workdir: com.mycompany.app.ShopCart
+      workdir: com.mycompany.app.shopCart
     strategy:
       matrix:
         include:
