@@ -41,8 +41,7 @@ public class ProductMongoRepository implements ProductRepository {
 
 	@Override
 	public void delete(String id) {
-		// TODO Auto-generated method stub
-
+		productCollection.deleteOne(Filters.eq("id", id));
 	}
 	
 	private Product fromDocumentToProduct(Document d) {
