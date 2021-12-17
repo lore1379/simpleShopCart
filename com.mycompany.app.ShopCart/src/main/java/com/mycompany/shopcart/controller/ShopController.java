@@ -35,10 +35,16 @@ public class ShopController {
 
 	public void checkoutProducts(List<Product> productsInCart) {
 		for (Product product : productsInCart) {
-			Product existingProduct = productRepository.findById(product.getId());
-			productRepository.delete(existingProduct.getId());
-			productView.removeProductFromCart(existingProduct);
-			productView.removeProductFromShop(existingProduct);
+			final Product availableProduct = productRepository.findById(product.getId());
+			if (availableProduct == null) {
+				productView.showError("The product you are trying to buy is no longer available: " + product.getName());
+				productView.removeProductFromCart(product);
+				productView.removeProductFromShop(product);
+				return;
+			}
+			productRepository.delete(availableProduct.getId());
+			productView.removeProductFromCart(availableProduct);
+			productView.removeProductFromShop(availableProduct);
 		}
 	}
 
