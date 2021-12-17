@@ -8,12 +8,12 @@ public interface ProductView {
 
 	void showAllProducts(List<Product> products);
 
-	void addProductToCart(Product productToBuy);
+	void addProductToCart(Product product);
 
-	void removeProductFromCart(Product productToRemove);
+	void removeProductFromCart(Product product);
 
-	void showError(String string);
+	void showError(String message);
 
-	void removeProductFromShop(Product product1);
+	void removeProductFromShop(Product product);
 
 }

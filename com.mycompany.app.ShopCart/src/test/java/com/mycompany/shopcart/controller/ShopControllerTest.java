@@ -65,7 +65,7 @@ public class ShopControllerTest {
 		Product productToBuy = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(null);
 		shopController.buyProduct(productToBuy);
-		verify(productView).showError("The product you are trying to buy is no longer available");
+		verify(productView).showError("The product you are trying to buy is no longer available: test");
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 	
@@ -101,6 +101,18 @@ public class ShopControllerTest {
 		verify(productView).removeProductFromShop(product1);
 		verify(productView).removeProductFromCart(product2);
 		verify(productView).removeProductFromShop(product2);
+	}
+	
+	@Test
+	public void testCheckoutProductsWhenAtLeastOneProductIsNotInDatabase() {
+		Product product = new Product("1", "test");
+		List<Product> productsInCart = asList(product);
+		when(productRepository.findById("1")).thenReturn(null);
+		shopController.checkoutProducts(productsInCart);
+		verify(productView).showError("The product you are trying to buy is no longer available: test");
+		verify(productView).removeProductFromCart(product);
+		verify(productView).removeProductFromShop(product);
+		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 
 }
