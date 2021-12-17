@@ -1,16 +1,14 @@
 package com.mycompany.shopcart.controller;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.ignoreStubs;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -82,9 +80,10 @@ public class ShopControllerTest {
 		List<Product> productsInCart = asList(product);
 		when(productRepository.findById("1")).thenReturn(product);
 		shopController.checkoutProducts(productsInCart);
-		verify(productRepository).delete("1");
-		verify(productView).removeProductFromCart(product);
-		verify(productView).removeProductFromShop(product);
+		InOrder inOrder = inOrder(productRepository, productView);
+		inOrder.verify(productRepository).delete("1");
+		inOrder.verify(productView).removeProductFromCart(product);
+		inOrder.verify(productView).removeProductFromShop(product);
 	}
 	
 	@Test
@@ -95,12 +94,13 @@ public class ShopControllerTest {
 		when(productRepository.findById("1")).thenReturn(product1);
 		when(productRepository.findById("2")).thenReturn(product2);
 		shopController.checkoutProducts(productsInCart);
-		verify(productRepository).delete("1");
-		verify(productRepository).delete("2");
-		verify(productView).removeProductFromCart(product1);
-		verify(productView).removeProductFromShop(product1);
-		verify(productView).removeProductFromCart(product2);
-		verify(productView).removeProductFromShop(product2);
+		InOrder inOrder = inOrder(productRepository, productView);
+		inOrder.verify(productRepository).delete("1");
+		inOrder.verify(productView).removeProductFromCart(product1);
+		inOrder.verify(productView).removeProductFromShop(product1);
+		inOrder.verify(productRepository).delete("2");
+		inOrder.verify(productView).removeProductFromCart(product2);
+		inOrder.verify(productView).removeProductFromShop(product2);
 	}
 	
 	@Test
