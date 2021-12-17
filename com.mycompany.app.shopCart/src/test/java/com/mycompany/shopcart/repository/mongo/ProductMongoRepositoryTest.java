@@ -75,6 +75,18 @@ public class ProductMongoRepositoryTest {
 				new Product("2", "test2"));
 	}
 	
+	@Test
+	public void testFindByIdNotFound() {
+		assertThat(productRepository.findById("1")).isNull();
+	}
+	
+	@Test
+	public void testFindByIdFound() {
+		addTestProductToDatabase("1", "test1");
+		addTestProductToDatabase("2", "test2");
+		assertThat(productRepository.findById("2")).isEqualTo(new Product("2", "test2"));
+	}
+	
 	private void addTestProductToDatabase(String id, String name) {
 		productCollection.insertOne(new Document()
 				.append("id", id)
