@@ -60,8 +60,7 @@ public class ProductMongoRepositoryTest {
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testFindAllWhenDatabaseIsEmpty() {
+		assertThat(productRepository.findAll()).isEmpty();
 	}
-
 }
