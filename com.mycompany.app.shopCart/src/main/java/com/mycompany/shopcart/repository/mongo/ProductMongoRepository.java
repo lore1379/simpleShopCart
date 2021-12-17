@@ -1,5 +1,6 @@
 package com.mycompany.shopcart.repository.mongo;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.bson.Document;
@@ -23,7 +24,7 @@ public class ProductMongoRepository implements ProductRepository {
 	@Override
 	public List<Product> findAll() {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
