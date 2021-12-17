@@ -15,6 +15,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mycompany.shopcart.model.Product;
 
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
@@ -62,5 +63,21 @@ public class ProductMongoRepositoryTest {
 	@Test
 	public void testFindAllWhenDatabaseIsEmpty() {
 		assertThat(productRepository.findAll()).isEmpty();
+	}
+	
+	@Test
+	public void testFindAllWhenDatabaseIsNotEmpty() {
+		addTestProductToDatabase("1", "test1");
+		addTestProductToDatabase("2", "test2");
+		assertThat(productRepository.findAll())
+			.containsExactly(
+				new Product("1", "test1"),
+				new Product("2", "test2"));
+	}
+	
+	private void addTestProductToDatabase(String id, String name) {
+		productCollection.insertOne(new Document()
+				.append("id", id)
+				.append("name", name));
 	}
 }
