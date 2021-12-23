@@ -68,6 +68,13 @@ public class ProductMongoRepositoryTestcontainersIT {
 			.isEqualTo(new Product("2", "test2"));
 	}
 	
+	@Test
+	public void testDelete() {
+		addTestProductToDatabase("1", "test1");
+		productRepository.delete("1");
+		assertThat(productCollection.find()).isEmpty();
+	}
+	
 	private void addTestProductToDatabase(String id, String name) {
 		productCollection.insertOne(
 				new Document()
