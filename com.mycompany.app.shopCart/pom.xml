@@ -23,6 +23,9 @@
     <mongo.driver.version>3.12.7</mongo.driver.version>
     <mongo.java.server.version>1.37.0</mongo.java.server.version>
     
+     <!-- Plugins versions -->
+    <build.helper.version>3.0.0</build.helper.version>
+    
     <sonar.organization>lore1379</sonar.organization>
   	<sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
@@ -129,8 +132,30 @@
       			<mutationThreshold>100</mutationThreshold>
       		</configuration>
   		</plugin>
-	     </plugins>
+	   </plugins>
 	</pluginManagement>
+	<plugins>
+  		<plugin>
+        	<groupId>org.codehaus.mojo</groupId>
+        	<artifactId>build-helper-maven-plugin</artifactId>
+        	<version>${build.helper.version}</version>
+        	<executions>
+          		<execution>
+            		<id>add-test-source</id>
+            		<phase>generate-test-sources</phase>
+            		<goals>
+              			<goal>add-test-source</goal>
+            		</goals>
+            		<configuration>
+              			<sources>
+              				<source>src/e2e/java</source>
+                			<source>src/it/java</source>
+              			</sources>
+            		</configuration>
+          		</execution>
+        	</executions>
+      	</plugin>
+      </plugins>
 </build>
   
   <profiles>
