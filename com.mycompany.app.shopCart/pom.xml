@@ -27,6 +27,7 @@
      <!-- Plugins versions -->
     <build.helper.version>3.0.0</build.helper.version>
     <failsafe.version>2.22.2</failsafe.version>
+    <docker.frabric8.version>0.34.1</docker.frabric8.version>
     
     <sonar.organization>lore1379</sonar.organization>
   	<sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -167,6 +168,11 @@
       		<groupId>org.apache.maven.plugins</groupId>
       		<artifactId>maven-failsafe-plugin</artifactId>
       		<version>${failsafe.version}</version>
+      		<configuration>
+      			<systemPropertyVariables>
+      				<mongo.port>${mongo.mapped.port}</mongo.port>
+      			</systemPropertyVariables>
+      		</configuration>
       		<executions>
 		    	<execution>
 		        	<goals>
@@ -176,6 +182,39 @@
 		        </execution>
 		    </executions>
 		</plugin>
+		<plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>${docker.frabric8.version}</version>
+        <configuration>
+        	<images>
+				<image>
+              		<name>mongo:4.4.3</name>
+              		<run>
+                		<ports>
+                  			<port>mongo.mapped.port:27017</port>
+                		</ports>
+              		</run>
+            	</image>
+			</images>
+		</configuration>
+        <executions>
+			<execution>
+				<id>docker:start</id>
+				<phase>pre-integration-test</phase>
+				<goals>
+					<goal>start</goal>
+				</goals>
+			</execution>
+			<execution>
+				<id>docker:stop</id>
+				<phase>post-integration-test</phase>
+				<goals>
+					<goal>stop</goal>
+				</goals>
+			</execution>
+		</executions>
+	</plugin>
 	</plugins>
 </build>
   

@@ -40,7 +40,7 @@ public class ShopControllerIT {
 			Integer.parseInt(System.getProperty("mongo.port", "27017"));
 
 	@Before
-	public void setUp() {
+	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
 		mongoClient = new MongoClient("localhost", mongoPort);
 		productRepository = new ProductMongoRepository(mongoClient,
