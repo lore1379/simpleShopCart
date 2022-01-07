@@ -26,6 +26,7 @@
     
      <!-- Plugins versions -->
     <build.helper.version>3.0.0</build.helper.version>
+    <failsafe.version>2.22.2</failsafe.version>
     
     <sonar.organization>lore1379</sonar.organization>
   	<sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -162,7 +163,20 @@
           		</execution>
         	</executions>
       	</plugin>
-      </plugins>
+      	<plugin>
+      		<groupId>org.apache.maven.plugins</groupId>
+      		<artifactId>maven-failsafe-plugin</artifactId>
+      		<version>${failsafe.version}</version>
+      		<executions>
+		    	<execution>
+		        	<goals>
+		            	<goal>integration-test</goal>
+		            	<goal>verify</goal>
+		            </goals>
+		        </execution>
+		    </executions>
+		</plugin>
+	</plugins>
 </build>
   
   <profiles>
