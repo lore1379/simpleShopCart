@@ -39,12 +39,12 @@ public class ShopController {
 			if (availableProduct == null) {
 				productView.showError("The product you are trying to buy is no longer available: " + product.getName());
 				productView.removeProductFromCart(product);
-				productView.removeProductFromShop(product);
+				productView.removeProductsFromShop(product);
 				return;
 			}
 			productRepository.delete(availableProduct.getId());
 			productView.removeProductFromCart(availableProduct);
-			productView.removeProductFromShop(availableProduct);
+			productView.removeProductsFromShop(availableProduct);
 		}
 	}
 

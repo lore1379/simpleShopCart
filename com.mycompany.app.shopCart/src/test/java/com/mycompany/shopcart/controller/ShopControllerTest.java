@@ -83,7 +83,7 @@ public class ShopControllerTest {
 		InOrder inOrder = inOrder(productRepository, productView);
 		inOrder.verify(productRepository).delete("1");
 		inOrder.verify(productView).removeProductFromCart(product);
-		inOrder.verify(productView).removeProductFromShop(product);
+		inOrder.verify(productView).removeProductsFromShop(product);
 	}
 	
 	@Test
@@ -97,10 +97,10 @@ public class ShopControllerTest {
 		InOrder inOrder = inOrder(productRepository, productView);
 		inOrder.verify(productRepository).delete("1");
 		inOrder.verify(productView).removeProductFromCart(product1);
-		inOrder.verify(productView).removeProductFromShop(product1);
+		inOrder.verify(productView).removeProductsFromShop(product1);
 		inOrder.verify(productRepository).delete("2");
 		inOrder.verify(productView).removeProductFromCart(product2);
-		inOrder.verify(productView).removeProductFromShop(product2);
+		inOrder.verify(productView).removeProductsFromShop(product2);
 	}
 	
 	@Test
@@ -111,7 +111,7 @@ public class ShopControllerTest {
 		shopController.checkoutProducts(productsInCart);
 		verify(productView).showError("The product you are trying to buy is no longer available: test");
 		verify(productView).removeProductFromCart(product);
-		verify(productView).removeProductFromShop(product);
+		verify(productView).removeProductsFromShop(product);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 
