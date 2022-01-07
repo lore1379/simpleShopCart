@@ -20,15 +20,14 @@ public class ProductMongoRepositoryTestcontainersIT {
 	
 	@ClassRule
 	public static final MongoDBContainer mongo =
-		new MongoDBContainer("mongo:4.4.3") 
-			.withExposedPorts(27017);
+		new MongoDBContainer("mongo:4.4.3");
 
 	private MongoClient client;
 	private ProductMongoRepository productRepository;
 	private MongoCollection<Document> productCollection;
 
-	private static final String SCHOOL_DB_NAME = "school";
-	private static final String STUDENT_COLLECTION_NAME = "name";
+	private static final String SHOP_DB_NAME = "shop";
+	private static final String PRODUCT_COLLECTION_NAME = "product";
 
 	
 	@Before
@@ -38,11 +37,11 @@ public class ProductMongoRepositoryTestcontainersIT {
 				mongo.getContainerIpAddress(),
 				mongo.getMappedPort(27017)));
 		productRepository =
-				new ProductMongoRepository(client, SCHOOL_DB_NAME, STUDENT_COLLECTION_NAME);
-		MongoDatabase database = client.getDatabase(SCHOOL_DB_NAME);
+				new ProductMongoRepository(client, SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
+		MongoDatabase database = client.getDatabase(SHOP_DB_NAME);
 		// make sure we always start with a clean database
 		database.drop();
-		productCollection = database.getCollection(STUDENT_COLLECTION_NAME);
+		productCollection = database.getCollection(PRODUCT_COLLECTION_NAME);
 	}
 	
 	@After
