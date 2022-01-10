@@ -62,8 +62,9 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
-	public void testCheckoutButtonShouldBeEnabledOnlyWhenAtLeastOneProductIsInCart() {
+	public void testCheckoutButtonShouldBeEnabledOnlyWhenAProductIsSelectedInCart() {
 		GuiActionRunner.execute(() -> shopSwingView.getListCartModel().addElement(new Product("1", "test")));
+		window.list("cartList").selectItem(0);
 		JButtonFixture checkoutButton = 
 				window.button(JButtonMatcher.withText("Checkout"));
 		checkoutButton.requireEnabled();

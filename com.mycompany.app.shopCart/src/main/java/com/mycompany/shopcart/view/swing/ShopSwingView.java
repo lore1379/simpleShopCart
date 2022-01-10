@@ -36,6 +36,8 @@ public class ShopSwingView extends JFrame implements ProductView {
 
 	private JButton btnRemoveSelected;
 
+	private JButton btnCheckout;
+
 	DefaultListModel<Product> getListCartModel() {
 		return listCartModel;
 	}
@@ -131,10 +133,12 @@ public class ShopSwingView extends JFrame implements ProductView {
 		
 		listCartModel = new DefaultListModel<>();
 		listCart = new JList<>(listCartModel);
+		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.addListSelectionListener(
 				e -> btnRemoveSelected.setEnabled(listCart.getSelectedIndex() != -1));
+		listCart.addListSelectionListener(
+				e -> btnCheckout.setEnabled(listCart.getSelectedIndex() != -1));
 		scrollPane_1.setViewportView(listCart);
-		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setName("cartList");
 		
 		btnRemoveSelected = new JButton("Remove Selected");
@@ -146,14 +150,14 @@ public class ShopSwingView extends JFrame implements ProductView {
 		gbc_btnRemoveSelected.gridy = 5;
 		contentPane.add(btnRemoveSelected, gbc_btnRemoveSelected);
 		
-		JButton btnNewButton = new JButton("Checkout");
-		btnNewButton.setEnabled(false);
+		btnCheckout = new JButton("Checkout");
+		btnCheckout.setEnabled(false);
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.gridwidth = 2;
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
 		gbc_btnNewButton.gridx = 2;
 		gbc_btnNewButton.gridy = 5;
-		contentPane.add(btnNewButton, gbc_btnNewButton);
+		contentPane.add(btnCheckout, gbc_btnNewButton);
 		
 		JLabel label = new JLabel(" ");
 		label.setName("errorMessageLabel");
