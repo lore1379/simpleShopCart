@@ -49,5 +49,16 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("productList").clearSelection();
 		buyButton.requireDisabled();
 	}
+	
+	@Test
+	public void testRemoveButtonShouldBeEnabledOnlyWhenAProductIsSelectedInCart() {
+		GuiActionRunner.execute(() -> shopSwingView.getListCartModel().addElement(new Product("1", "test")));
+		window.list("cartList").selectItem(0);
+		JButtonFixture removeButton = 
+				window.button(JButtonMatcher.withText("Remove Selected"));
+		removeButton.requireEnabled();
+		window.list("cartList").clearSelection();
+		removeButton.requireDisabled();
+	}
 
 }
