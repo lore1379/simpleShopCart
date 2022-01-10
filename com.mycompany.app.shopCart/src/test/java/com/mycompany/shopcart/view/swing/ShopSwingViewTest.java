@@ -1,5 +1,9 @@
 package com.mycompany.shopcart.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
+
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -71,5 +75,17 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("cartList").clearSelection();
 		checkoutButton.requireDisabled();
 	}
-
+	
+	@Test
+	public void testsShowAllProductsShouldAddProductDescriptionToProductsList() {
+		Product product1 = new Product("1", "test1");
+		Product product2 = new Product("2", "test2");
+		GuiActionRunner.execute(
+				() -> shopSwingView.showAllProducts(
+						Arrays.asList(product1, product2))
+		);
+		String[] listContents = window.list().contents();
+		assertThat(listContents)
+			.containsExactly(product1.toString(), product2.toString());
+	}
 }
