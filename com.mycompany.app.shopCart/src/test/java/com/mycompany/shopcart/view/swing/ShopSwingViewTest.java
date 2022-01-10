@@ -4,10 +4,13 @@ import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JButtonFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import com.mycompany.shopcart.model.Product;
 
 @RunWith(GUITestRunner.class)
 public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
@@ -34,6 +37,17 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Remove Selected")).requireDisabled();
 		window.button(JButtonMatcher.withText("Checkout")).requireDisabled();
 		window.label("errorMessageLabel").requireText(" ");
+	}
+	
+	@Test
+	public void testBuyButtonShouldBeEnabledOnlyWhenAProductIsSelectedInShop() {
+		GuiActionRunner.execute(() -> shopSwingView.getListProductsModel().addElement(new Product("1", "test")));
+		window.list("productList").selectItem(0);
+		JButtonFixture buyButton = 
+				window.button(JButtonMatcher.withText("Buy Selected"));
+		buyButton.requireEnabled();
+		window.list("productList").clearSelection();
+		buyButton.requireDisabled();
 	}
 
 }
