@@ -18,8 +18,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ShopSwingView extends JFrame implements ProductView {
 
@@ -35,6 +33,8 @@ public class ShopSwingView extends JFrame implements ProductView {
 	
 	private DefaultListModel<Product> listProductsModel;
 	private DefaultListModel<Product> listCartModel;
+
+	private JButton btnRemoveSelected;
 
 	DefaultListModel<Product> getListCartModel() {
 		return listCartModel;
@@ -131,16 +131,14 @@ public class ShopSwingView extends JFrame implements ProductView {
 		
 		listCartModel = new DefaultListModel<>();
 		listCart = new JList<>(listCartModel);
+		listCart.addListSelectionListener(
+				e -> btnRemoveSelected.setEnabled(listCart.getSelectedIndex() != -1));
 		scrollPane_1.setViewportView(listCart);
 		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listCart.setName("cartList");
 		
-		JButton btnRemoveSelected = new JButton("Remove Selected");
+		btnRemoveSelected = new JButton("Remove Selected");
 		btnRemoveSelected.setEnabled(false);
-		btnRemoveSelected.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		GridBagConstraints gbc_btnRemoveSelected = new GridBagConstraints();
 		gbc_btnRemoveSelected.anchor = GridBagConstraints.EAST;
 		gbc_btnRemoveSelected.insets = new Insets(0, 0, 5, 5);
