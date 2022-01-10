@@ -29,13 +29,17 @@ public class ShopSwingView extends JFrame implements ProductView {
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel contentPane;
+	private JButton btnBuySelected;
 	private JList<Product> listProducts;
+	private JList<Product> listCart;
 	
 	private DefaultListModel<Product> listProductsModel;
+	private DefaultListModel<Product> listCartModel;
 
-	private JButton btnBuySelected;
+	DefaultListModel<Product> getListCartModel() {
+		return listCartModel;
+	}
 
-	
 	DefaultListModel<Product> getListProductsModel() {
 		return listProductsModel;
 	}
@@ -125,10 +129,11 @@ public class ShopSwingView extends JFrame implements ProductView {
 		gbc_scrollPane_1.gridy = 4;
 		contentPane.add(scrollPane_1, gbc_scrollPane_1);
 		
-		JList list_1 = new JList();
-		scrollPane_1.setViewportView(list_1);
-		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list_1.setName("cartList");
+		listCartModel = new DefaultListModel<>();
+		listCart = new JList<>(listCartModel);
+		scrollPane_1.setViewportView(listCart);
+		listCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listCart.setName("cartList");
 		
 		JButton btnRemoveSelected = new JButton("Remove Selected");
 		btnRemoveSelected.setEnabled(false);
