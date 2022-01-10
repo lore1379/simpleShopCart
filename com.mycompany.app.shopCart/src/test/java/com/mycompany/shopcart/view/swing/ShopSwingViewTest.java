@@ -117,7 +117,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		);
 		window.label("errorMessageLabel")
 			.requireText("error message: " + product1.getName());
-		assertThat(window.list("productList").contents())
+		assertThat(window.list("cartList").contents())
 			.containsExactly(product2.toString());
 		
 	}
