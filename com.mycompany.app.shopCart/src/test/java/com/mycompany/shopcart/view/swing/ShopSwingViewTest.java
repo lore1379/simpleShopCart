@@ -28,8 +28,12 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 	
 	@Test @GUITest
 	public void testControlsInitialStates() {
-		window.button(JButtonMatcher.withText("Buy Selected")).requireDisabled();
 		window.list("productList");
+		window.button(JButtonMatcher.withText("Buy Selected")).requireDisabled();
+		window.list("cartList");
+		window.button(JButtonMatcher.withText("Remove Selected")).requireDisabled();
+		window.button(JButtonMatcher.withText("Checkout")).requireDisabled();
+		window.label("errorMessageLabel").requireText(" ");
 	}
 
 }
