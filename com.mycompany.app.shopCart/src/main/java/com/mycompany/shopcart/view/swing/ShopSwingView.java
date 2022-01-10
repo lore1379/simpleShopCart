@@ -33,6 +33,8 @@ public class ShopSwingView extends JFrame implements ProductView {
 	
 	private DefaultListModel<Product> listProductsModel;
 
+	private JButton btnBuySelected;
+
 	
 	DefaultListModel<Product> getListProductsModel() {
 		return listProductsModel;
@@ -90,11 +92,13 @@ public class ShopSwingView extends JFrame implements ProductView {
 		
 		listProductsModel = new DefaultListModel<>();
 		listProducts = new JList<>(listProductsModel);
+		listProducts.addListSelectionListener(
+				e -> btnBuySelected.setEnabled(listProducts.getSelectedIndex() != -1));
 		scrollPane.setViewportView(listProducts);
 		listProducts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listProducts.setName("productList");
 		
-		JButton btnBuySelected = new JButton("Buy Selected");
+		btnBuySelected = new JButton("Buy Selected");
 		btnBuySelected.setEnabled(false);
 		GridBagConstraints gbc_btnBuySelected = new GridBagConstraints();
 		gbc_btnBuySelected.gridwidth = 4;
