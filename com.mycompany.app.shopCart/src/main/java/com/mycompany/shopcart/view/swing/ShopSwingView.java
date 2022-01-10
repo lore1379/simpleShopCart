@@ -16,6 +16,7 @@ import javax.swing.JList;
 import java.awt.Insets;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -26,7 +27,16 @@ public class ShopSwingView extends JFrame implements ProductView {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	private JPanel contentPane;
+	private JList<Product> listProducts;
+	
+	private DefaultListModel<Product> listProductsModel;
+
+	
+	DefaultListModel<Product> getListProductsModel() {
+		return listProductsModel;
+	}
 
 	/**
 	 * Launch the application.
@@ -78,10 +88,11 @@ public class ShopSwingView extends JFrame implements ProductView {
 		gbc_scrollPane.gridy = 1;
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
-		JList list = new JList();
-		scrollPane.setViewportView(list);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setName("productList");
+		listProductsModel = new DefaultListModel<>();
+		listProducts = new JList<>(listProductsModel);
+		scrollPane.setViewportView(listProducts);
+		listProducts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listProducts.setName("productList");
 		
 		JButton btnBuySelected = new JButton("Buy Selected");
 		btnBuySelected.setEnabled(false);
