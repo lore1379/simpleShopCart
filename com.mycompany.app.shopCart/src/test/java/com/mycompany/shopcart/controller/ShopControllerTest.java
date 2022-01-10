@@ -63,7 +63,7 @@ public class ShopControllerTest {
 		Product productToBuy = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(null);
 		shopController.buyProduct(productToBuy);
-		verify(productView).showError("The product you are trying to buy is no longer available: test");
+		verify(productView).showError("The product you are trying to buy is no longer available: ", productToBuy);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 	
@@ -109,7 +109,7 @@ public class ShopControllerTest {
 		List<Product> productsInCart = asList(product);
 		when(productRepository.findById("1")).thenReturn(null);
 		shopController.checkoutProducts(productsInCart);
-		verify(productView).showError("The product you are trying to buy is no longer available: test");
+		verify(productView).showError("The product you are trying to buy is no longer available: ", product);
 		verify(productView).removeProductFromCart(product);
 		verify(productView).removeProductsFromShop(product);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));

@@ -23,7 +23,7 @@ public class ShopController {
 	public void buyProduct(Product productToBuy) {
 		final Product availableProduct = productRepository.findById(productToBuy.getId());
 		if (availableProduct == null) {
-			productView.showError("The product you are trying to buy is no longer available: " + productToBuy.getName());
+			productView.showError("The product you are trying to buy is no longer available: ", productToBuy);
 			return;
 		}
 		productView.addProductToCart(productRepository.findById(productToBuy.getId()));		
@@ -37,7 +37,7 @@ public class ShopController {
 		for (Product product : productsInCart) {
 			final Product availableProduct = productRepository.findById(product.getId());
 			if (availableProduct == null) {
-				productView.showError("The product you are trying to buy is no longer available: " + product.getName());
+				productView.showError("The product you are trying to buy is no longer available: ", product);
 				productView.removeProductFromCart(product);
 				productView.removeProductsFromShop(product);
 				return;

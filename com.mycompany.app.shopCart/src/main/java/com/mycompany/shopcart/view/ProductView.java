@@ -12,7 +12,7 @@ public interface ProductView {
 
 	void removeProductFromCart(Product product);
 
-	void showError(String message);
+	void showError(String message,Product product);
 
 	void removeProductsFromShop(Product product);
 
