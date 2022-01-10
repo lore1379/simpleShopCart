@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 
+import javax.swing.DefaultListModel;
+
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -97,6 +99,27 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		);
 		window.label("errorMessageLabel")
 			.requireText("error message: " + product.getName());
+	}
+	
+	@Test
+	public void testShowErrorProductNotFoundWhenCheckout() {
+		Product product1 = new Product("1", "test1");
+		Product product2 = new Product("2", "test2");
+		GuiActionRunner.execute(
+				() -> {
+					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+					listCartModel.addElement(product1);
+					listCartModel.addElement(product2);
+				}
+		);
+		GuiActionRunner.execute(
+				() -> shopSwingView.showErrorProductNotFound("error message", product1)
+		);
+		window.label("errorMessageLabel")
+			.requireText("error message: " + product1.getName());
+		assertThat(window.list("productList").contents())
+			.containsExactly(product2.toString());
+		
 	}
 	
 }

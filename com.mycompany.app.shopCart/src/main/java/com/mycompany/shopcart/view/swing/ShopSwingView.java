@@ -198,5 +198,11 @@ public class ShopSwingView extends JFrame implements ProductView {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void showErrorProductNotFound(String message, Product product) {
+		
+	}
+
 
 }

@@ -15,5 +15,7 @@ public interface ProductView {
 	void showError(String message,Product product);
 
 	void removeProductsFromShop(Product product);
+	
+	void showErrorProductNotFound(String message, Product product);
 
 }
