@@ -84,7 +84,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 				() -> shopSwingView.showAllProducts(
 						Arrays.asList(product1, product2))
 		);
-		String[] listContents = window.list().contents();
+		String[] listContents = window.list("productList").contents();
 		assertThat(listContents)
 			.containsExactly(product1.toString(), product2.toString());
 	}
