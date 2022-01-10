@@ -88,4 +88,15 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(listContents)
 			.containsExactly(product1.toString(), product2.toString());
 	}
+	
+	@Test
+	public void testShowErrorShouldShowTheMessageInTheErrorLabel() {
+		Product product = new Product("1", "test1");
+		GuiActionRunner.execute(
+			() -> shopSwingView.showError("error message", product)
+		);
+		window.label("errorMessageLabel")
+			.requireText("error message: " + product);
+	}
+	
 }
