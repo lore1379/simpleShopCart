@@ -1,5 +1,7 @@
 package com.mycompany.shopcart.view.swing;
 
+import org.assertj.swing.annotation.GUITest;
+import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
@@ -24,9 +26,10 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.show();
 	}
 	
-	@Test
-	public void test() {
-		// Just to check the setup works
+	@Test @GUITest
+	public void testControlsInitialStates() {
+		window.button(JButtonMatcher.withText("Buy")).requireDisabled();
+		window.list("productList");
 	}
 
 }
