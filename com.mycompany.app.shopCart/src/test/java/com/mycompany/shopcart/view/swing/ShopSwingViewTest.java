@@ -96,7 +96,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 			() -> shopSwingView.showError("error message", product)
 		);
 		window.label("errorMessageLabel")
-			.requireText("error message: " + product);
+			.requireText("error message: " + product.getName());
 	}
 	
 }

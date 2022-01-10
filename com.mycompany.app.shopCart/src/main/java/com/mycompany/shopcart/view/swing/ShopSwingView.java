@@ -38,6 +38,8 @@ public class ShopSwingView extends JFrame implements ProductView {
 
 	private JButton btnCheckout;
 
+	private JLabel lblErrorMessage;
+
 	DefaultListModel<Product> getListCartModel() {
 		return listCartModel;
 	}
@@ -159,14 +161,14 @@ public class ShopSwingView extends JFrame implements ProductView {
 		gbc_btnNewButton.gridy = 5;
 		contentPane.add(btnCheckout, gbc_btnNewButton);
 		
-		JLabel label = new JLabel(" ");
-		label.setName("errorMessageLabel");
+		lblErrorMessage = new JLabel(" ");
+		lblErrorMessage.setName("errorMessageLabel");
 		GridBagConstraints gbc_label = new GridBagConstraints();
 		gbc_label.gridwidth = 4;
 		gbc_label.insets = new Insets(0, 0, 0, 5);
 		gbc_label.gridx = 0;
 		gbc_label.gridy = 6;
-		contentPane.add(label, gbc_label);
+		contentPane.add(lblErrorMessage, gbc_label);
 	}
 
 	@Override
@@ -187,9 +189,8 @@ public class ShopSwingView extends JFrame implements ProductView {
 	}
 
 	@Override
-	public void showError(String message) {
-		// TODO Auto-generated method stub
-		
+	public void showError(String message, Product product) {
+		lblErrorMessage.setText(message + ": " + product.getName() );
 	}
 
 	@Override
