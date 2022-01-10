@@ -1,6 +1,5 @@
 package com.mycompany.shopcart.view.swing;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.util.List;
 
@@ -23,6 +22,10 @@ import java.awt.event.ActionEvent;
 
 public class ShopSwingView extends JFrame implements ProductView {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 	/**
