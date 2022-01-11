@@ -1,4 +1,4 @@
-package com.mycompany.shopcart;
+package com.mycompany.shopcart.repository.mongo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,7 +14,6 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mycompany.shopcart.model.Product;
-import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 
 public class ProductMongoRepositoryTestcontainersIT {
 	
