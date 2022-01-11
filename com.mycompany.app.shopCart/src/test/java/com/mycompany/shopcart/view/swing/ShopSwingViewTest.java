@@ -1,6 +1,7 @@
 package com.mycompany.shopcart.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 
@@ -15,7 +16,10 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import com.mycompany.shopcart.controller.ShopController;
 import com.mycompany.shopcart.model.Product;
 
 @RunWith(GUITestRunner.class)
@@ -24,9 +28,15 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 	private FrameFixture window;
 
 	private ShopSwingView shopSwingView;
+	
+	@Mock
+	private ShopController shopController;
+	
+	private AutoCloseable closeable;
 
 	@Override
 	protected void onSetUp() {
+		closeable = MockitoAnnotations.openMocks(this);
 		GuiActionRunner.execute(() -> {
 			shopSwingView = new ShopSwingView();
 			return shopSwingView;
@@ -34,6 +44,12 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window = new FrameFixture(robot(), shopSwingView);
 		window.show();
 	}
+	
+	@Override
+	protected void onTearDown() throws Exception {
+		closeable.close();
+	}
+
 	
 	@Test @GUITest
 	public void testControlsInitialStates() {
@@ -186,4 +202,19 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("errorMessageLabel").requireText(" ");
 	}
 	
+	@Test
+	public void testAddButtonShouldDelegateToSchoolControllerNewStudent() {
+		Product product1 = new Product("1", "test1");
+		Product product2 = new Product("2", "test2");
+		GuiActionRunner.execute(
+				() -> {
+					DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
+					listProductsModel.addElement(product1);
+					listProductsModel.addElement(product2);
+				}
+				);
+		window.list("productList").selectItem(1);
+		window.button(JButtonMatcher.withText("Buy Selected")).click();
+		verify(shopController).buyProduct(product2);
+	}
 }
