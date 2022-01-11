@@ -151,6 +151,8 @@ public class ShopSwingView extends JFrame implements ProductView {
 		
 		btnRemoveSelected = new JButton("Remove Selected");
 		btnRemoveSelected.setEnabled(false);
+		btnRemoveSelected.addActionListener(
+				e -> shopController.removeProduct(listCart.getSelectedValue()));
 		GridBagConstraints gbc_btnRemoveSelected = new GridBagConstraints();
 		gbc_btnRemoveSelected.anchor = GridBagConstraints.EAST;
 		gbc_btnRemoveSelected.insets = new Insets(0, 0, 5, 5);
