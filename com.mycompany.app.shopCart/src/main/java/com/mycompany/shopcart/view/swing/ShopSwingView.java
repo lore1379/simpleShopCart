@@ -1,7 +1,5 @@
 package com.mycompany.shopcart.view.swing;
 
-import static java.util.Arrays.asList;
-
 import java.awt.EventQueue;
 import java.util.List;
 
@@ -165,7 +163,7 @@ public class ShopSwingView extends JFrame implements ProductView {
 		btnCheckout = new JButton("Checkout");
 		btnCheckout.setEnabled(false);
 		btnCheckout.addActionListener(
-				e -> shopController.checkoutProduct(asList(listCart.getSelectedValue())));
+				e -> shopController.checkoutProduct(listCart.getSelectedValue()));
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.gridwidth = 2;
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);

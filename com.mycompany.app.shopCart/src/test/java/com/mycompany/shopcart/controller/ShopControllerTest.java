@@ -75,43 +75,22 @@ public class ShopControllerTest {
 	}
 	
 	@Test
-	public void testCheckoutProductsWhenOneProductIsInDatabase() {
-		Product product = new Product("1", "test1");
-		List<Product> productsInCart = asList(product);
-		when(productRepository.findById("1")).thenReturn(product);
-		shopController.checkoutProduct(productsInCart);
+	public void testCheckoutProductWhenProductIsInDatabase() {
+		Product productInCart = new Product("1", "test1");
+		when(productRepository.findById("1")).thenReturn(productInCart);
+		shopController.checkoutProduct(productInCart);
 		InOrder inOrder = inOrder(productRepository, productView);
 		inOrder.verify(productRepository).delete("1");
-		inOrder.verify(productView).removeProductFromCart(product);
-		inOrder.verify(productView).checkoutProduct(product);
+		inOrder.verify(productView).checkoutProduct(productInCart);
 	}
 	
 	@Test
-	public void testCheckoutProductsWhenSeveralProductAreInDatabase() {
-		Product product1 = new Product("1", "test1");
-		Product product2 = new Product("2", "test2");
-		List<Product> productsInCart = asList(product1, product2);
-		when(productRepository.findById("1")).thenReturn(product1);
-		when(productRepository.findById("2")).thenReturn(product2);
-		shopController.checkoutProduct(productsInCart);
-		InOrder inOrder = inOrder(productRepository, productView);
-		inOrder.verify(productRepository).delete("1");
-		inOrder.verify(productView).removeProductFromCart(product1);
-		inOrder.verify(productView).checkoutProduct(product1);
-		inOrder.verify(productRepository).delete("2");
-		inOrder.verify(productView).removeProductFromCart(product2);
-		inOrder.verify(productView).checkoutProduct(product2);
-	}
-	
-	@Test
-	public void testCheckoutProductsWhenAtLeastOneProductIsNotInDatabase() {
-		Product product = new Product("1", "test");
-		List<Product> productsInCart = asList(product);
+	public void testCheckoutProductWhenProductIsNotInDatabase() {
+		Product productInCart = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(null);
-		shopController.checkoutProduct(productsInCart);
-		verify(productView).showError("The product you are trying to buy is no longer available: ", product);
-		verify(productView).removeProductFromCart(product);
-		verify(productView).checkoutProduct(product);
+		shopController.checkoutProduct(productInCart);
+		verify(productView).showError("The product you are trying to buy is no longer available: ", productInCart);
+		verify(productView).checkoutProduct(productInCart);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 

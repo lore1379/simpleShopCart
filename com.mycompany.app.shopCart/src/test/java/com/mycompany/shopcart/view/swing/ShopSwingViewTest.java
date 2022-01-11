@@ -2,7 +2,6 @@ package com.mycompany.shopcart.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
-import static java.util.Arrays.asList;
 
 import java.util.Arrays;
 
@@ -249,6 +248,6 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 				);
 		window.list("cartList").selectItem(1);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		verify(shopController).checkoutProduct(asList(product2));
+		verify(shopController).checkoutProduct(product2);
 	}
 }
