@@ -204,7 +204,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
-	public void testAddButtonShouldDelegateToSchoolControllerNewStudent() {
+	public void testAddButtonShouldDelegateToShopControllerBuyProduct() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
 		GuiActionRunner.execute(
@@ -217,5 +217,21 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("productList").selectItem(1);
 		window.button(JButtonMatcher.withText("Buy Selected")).click();
 		verify(shopController).buyProduct(product2);
+	}
+	
+	@Test
+	public void testRemoveButtonShouldDelegateToShopControllerRemoveProduct() {
+		Product product1 = new Product("1", "test1");
+		Product product2 = new Product("2", "test2");
+		GuiActionRunner.execute(
+				() -> {
+					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+					listCartModel.addElement(product1);
+					listCartModel.addElement(product2);
+				}
+				);
+		window.list("cartList").selectItem(1);
+		window.button(JButtonMatcher.withText("Remove Selected")).click();
+		verify(shopController).removeProduct(product2);
 	}
 }
