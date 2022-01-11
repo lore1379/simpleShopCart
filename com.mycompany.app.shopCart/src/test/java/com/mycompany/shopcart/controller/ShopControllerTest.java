@@ -79,7 +79,7 @@ public class ShopControllerTest {
 		Product product = new Product("1", "test1");
 		List<Product> productsInCart = asList(product);
 		when(productRepository.findById("1")).thenReturn(product);
-		shopController.checkoutProducts(productsInCart);
+		shopController.checkoutProduct(productsInCart);
 		InOrder inOrder = inOrder(productRepository, productView);
 		inOrder.verify(productRepository).delete("1");
 		inOrder.verify(productView).removeProductFromCart(product);
@@ -93,7 +93,7 @@ public class ShopControllerTest {
 		List<Product> productsInCart = asList(product1, product2);
 		when(productRepository.findById("1")).thenReturn(product1);
 		when(productRepository.findById("2")).thenReturn(product2);
-		shopController.checkoutProducts(productsInCart);
+		shopController.checkoutProduct(productsInCart);
 		InOrder inOrder = inOrder(productRepository, productView);
 		inOrder.verify(productRepository).delete("1");
 		inOrder.verify(productView).removeProductFromCart(product1);
@@ -108,7 +108,7 @@ public class ShopControllerTest {
 		Product product = new Product("1", "test");
 		List<Product> productsInCart = asList(product);
 		when(productRepository.findById("1")).thenReturn(null);
-		shopController.checkoutProducts(productsInCart);
+		shopController.checkoutProduct(productsInCart);
 		verify(productView).showError("The product you are trying to buy is no longer available: ", product);
 		verify(productView).removeProductFromCart(product);
 		verify(productView).checkoutProduct(product);

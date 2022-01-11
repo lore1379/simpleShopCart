@@ -2,6 +2,7 @@ package com.mycompany.shopcart.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static java.util.Arrays.asList;
 
 import java.util.Arrays;
 
@@ -233,5 +234,21 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("cartList").selectItem(1);
 		window.button(JButtonMatcher.withText("Remove Selected")).click();
 		verify(shopController).removeProduct(product2);
+	}
+	
+	@Test
+	public void testCheckoutButtonShouldDelegateToShopControllerCheckoutProduct() {
+		Product product1 = new Product("1", "test1");
+		Product product2 = new Product("2", "test2");
+		GuiActionRunner.execute(
+				() -> {
+					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+					listCartModel.addElement(product1);
+					listCartModel.addElement(product2);
+				}
+				);
+		window.list("cartList").selectItem(1);
+		window.button(JButtonMatcher.withText("Checkout")).click();
+		verify(shopController).checkoutProduct(asList(product2));
 	}
 }

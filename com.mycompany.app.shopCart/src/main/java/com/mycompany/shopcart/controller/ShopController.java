@@ -33,7 +33,7 @@ public class ShopController {
 		productView.removeProductFromCart(productToRemove);
 	}
 
-	public void checkoutProducts(List<Product> productsInCart) {
+	public void checkoutProduct(List<Product> productsInCart) {
 		for (Product product : productsInCart) {
 			final Product availableProduct = productRepository.findById(product.getId());
 			if (availableProduct == null) {

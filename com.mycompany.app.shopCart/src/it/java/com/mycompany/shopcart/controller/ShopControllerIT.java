@@ -88,7 +88,7 @@ public class ShopControllerIT {
 	public void testCheckoutProducts() {
 		Product productToCheckout = new Product("1", "test");
 		addTestProductToDatabase(productToCheckout.getId(), productToCheckout.getName());
-		shopController.checkoutProducts(asList(productToCheckout));
+		shopController.checkoutProduct(asList(productToCheckout));
 		verify(productView).checkoutProduct(productToCheckout);
 
 	}
