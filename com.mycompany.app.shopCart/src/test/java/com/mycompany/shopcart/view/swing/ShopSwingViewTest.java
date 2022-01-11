@@ -122,4 +122,16 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		
 	}
 	
+	@Test
+	public void testAddProductToCartShouldAddTheProductToCartListAndResetTheErrorLabel() {
+		Product product = new Product("1", "test1");
+		GuiActionRunner.execute(
+				() ->
+				shopSwingView.addProductToCart(product)
+				);
+		String[] listContents = window.list("cartList").contents();
+		assertThat(listContents).containsExactly(product.toString());
+		window.label("errorMessageLabel").requireText(" ");
+	}
+	
 }
