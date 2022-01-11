@@ -109,6 +109,18 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
 		.containsExactly(product2.toString());
 	}
 	
+	@Test @GUITest
+	public void testBuyButtonError() {
+		Product product = new Product("1", "test1");
+		GuiActionRunner.execute(
+				() -> shopSwingView.getListProductsModel().addElement(product));
+		window.list("productList").selectItem(0);
+		window.button(JButtonMatcher.withText("Buy Selected")).click();
+		window.label("errorMessageLabel").requireText("The product you are trying to buy is no longer available: " + product.getName());
+		assertThat(window.list("productList").contents())
+			.isEmpty();
+	}
+	
 	private void addTestProductToDatabase(String id, String name) {
 		productCollection.insertOne(
 				new Document()
