@@ -178,8 +178,8 @@ public class ShopSwingView extends JFrame implements ProductView {
 
 	@Override
 	public void addProductToCart(Product product) {
-		// TODO Auto-generated method stub
-		
+		listCartModel.addElement(product);
+		resetErrorLabel();
 	}
 
 	@Override
@@ -204,6 +204,10 @@ public class ShopSwingView extends JFrame implements ProductView {
 		lblErrorMessage.setText(message + ": " + product.getName());
 		listCartModel.removeElement(product);
 	}
-
+	
+	private void resetErrorLabel() {
+		lblErrorMessage.setText(" ");
+		
+	}
 
 }
