@@ -21,7 +21,7 @@ public class ShopController {
 	public void buyProduct(Product productToBuy) {
 		final Product availableProduct = productRepository.findById(productToBuy.getId());
 		if (availableProduct == null) {
-			productView.showError("The product you are trying to buy is no longer available: ", productToBuy);
+			productView.showError("The product you are trying to buy is no longer available", productToBuy);
 			productView.removeProductFromShop(productToBuy);
 			return;
 		}

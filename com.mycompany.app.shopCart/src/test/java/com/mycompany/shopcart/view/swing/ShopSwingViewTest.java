@@ -204,6 +204,24 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 	
 	@Test
+	public void testRemoveProductFromShopShouldRemoveTheProductFromProductList() {
+		Product product1 = new Product("1", "test1");
+		Product product2 = new Product("2", "test2");
+		GuiActionRunner.execute(
+				() -> {
+					DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
+					listProductsModel.addElement(product1);
+					listProductsModel.addElement(product2);
+				}
+				);
+		GuiActionRunner.execute(
+				() -> shopSwingView.removeProductFromShop(new Product("1", "test1"))
+		);
+		String[] listContents = window.list("productList").contents();
+		assertThat(listContents).containsExactly(product2.toString());
+	}
+	
+	@Test
 	public void testAddButtonShouldDelegateToShopControllerBuyProduct() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
