@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.InetSocketAddress;
 
+import javax.swing.DefaultListModel;
+
 import org.assertj.swing.annotation.GUITest;
+import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -83,6 +86,27 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
 				() -> shopController.allProducts());
 		assertThat(window.list("productList").contents())
 			.containsExactly(product1.toString(), product2.toString());
+	}
+	
+	@Test @GUITest
+	public void testBuyButtonSuccess() {
+		Product product1 = new Product("1", "test1");
+		Product product2 = new Product("2", "test2");
+		addTestProductToDatabase(product1.getId(), product1.getName());
+		addTestProductToDatabase(product2.getId(), product2.getName());
+		GuiActionRunner.execute(
+				() -> {
+					DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
+					listProductsModel.addElement(product1);
+					listProductsModel.addElement(product2);
+				}
+		);
+		window.list("productList").selectItem(1);
+		window.button(JButtonMatcher.withText("Buy Selected")).click();
+		assertThat(window.list("productList").contents())
+			.containsExactly(product1.toString());
+		assertThat(window.list("cartList").contents())
+		.containsExactly(product2.toString());
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {
