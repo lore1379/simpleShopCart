@@ -217,14 +217,13 @@ public class ShopSwingView extends JFrame implements ProductView {
 		listCartModel.removeElement(product);
 	}
 	
-	private void resetErrorLabel() {
-		lblErrorMessage.setText(" ");
-		
-	}
-
 	@Override
 	public void removeProductFromShop(Product productToBuy) {
-		// TODO Auto-generated method stub
+		listProductsModel.removeElement(productToBuy);
+	}
+	
+	private void resetErrorLabel() {
+		lblErrorMessage.setText(" ");
 		
 	}
 
