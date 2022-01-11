@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.mycompany.shopcart.controller.ShopController;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.view.ProductView;
 import java.awt.GridBagLayout;
@@ -30,15 +31,14 @@ public class ShopSwingView extends JFrame implements ProductView {
 	private JButton btnBuySelected;
 	private JList<Product> listProducts;
 	private JList<Product> listCart;
+	private JButton btnRemoveSelected;
+	private JButton btnCheckout;
+	private JLabel lblErrorMessage;
 	
 	private DefaultListModel<Product> listProductsModel;
 	private DefaultListModel<Product> listCartModel;
-
-	private JButton btnRemoveSelected;
-
-	private JButton btnCheckout;
-
-	private JLabel lblErrorMessage;
+	
+	private ShopController shopController;
 
 	DefaultListModel<Product> getListCartModel() {
 		return listCartModel;
@@ -46,6 +46,10 @@ public class ShopSwingView extends JFrame implements ProductView {
 
 	DefaultListModel<Product> getListProductsModel() {
 		return listProductsModel;
+	}
+	
+	public void setShopController(ShopController shopController) {
+		this.shopController = shopController;
 	}
 
 	/**

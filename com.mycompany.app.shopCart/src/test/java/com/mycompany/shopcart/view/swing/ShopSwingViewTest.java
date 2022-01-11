@@ -39,6 +39,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		closeable = MockitoAnnotations.openMocks(this);
 		GuiActionRunner.execute(() -> {
 			shopSwingView = new ShopSwingView();
+			shopSwingView.setShopController(shopController);
 			return shopSwingView;
 		});
 		window = new FrameFixture(robot(), shopSwingView);
