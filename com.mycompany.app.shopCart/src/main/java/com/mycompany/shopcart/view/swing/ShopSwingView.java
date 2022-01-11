@@ -194,7 +194,7 @@ public class ShopSwingView extends JFrame implements ProductView {
 	}
 
 	@Override
-	public void removeProductsFromShop(Product product) {
+	public void checkoutProduct(Product product) {
 		// TODO Auto-generated method stub
 		
 	}
