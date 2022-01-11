@@ -18,4 +18,6 @@ public interface ProductView {
 	
 	void showErrorProductNotFound(String message, Product product);
 
+	void removeProductFromShop(Product productToBuy);
+
 }

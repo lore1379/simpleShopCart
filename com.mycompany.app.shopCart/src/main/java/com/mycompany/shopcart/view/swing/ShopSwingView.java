@@ -222,4 +222,10 @@ public class ShopSwingView extends JFrame implements ProductView {
 		
 	}
 
+	@Override
+	public void removeProductFromShop(Product productToBuy) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
