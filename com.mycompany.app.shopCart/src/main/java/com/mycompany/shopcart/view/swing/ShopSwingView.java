@@ -112,6 +112,8 @@ public class ShopSwingView extends JFrame implements ProductView {
 		
 		btnBuySelected = new JButton("Buy Selected");
 		btnBuySelected.setEnabled(false);
+		btnBuySelected.addActionListener(
+				e -> shopController.buyProduct(listProducts.getSelectedValue()));
 		GridBagConstraints gbc_btnBuySelected = new GridBagConstraints();
 		gbc_btnBuySelected.gridwidth = 4;
 		gbc_btnBuySelected.insets = new Insets(0, 0, 5, 0);
