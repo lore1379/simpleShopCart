@@ -1,24 +1,23 @@
 package com.mycompany.shopcart.view.swing;
 
-import java.awt.EventQueue;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import com.mycompany.shopcart.controller.ShopController;
-import com.mycompany.shopcart.model.Product;
-import com.mycompany.shopcart.view.ProductView;
-import java.awt.GridBagLayout;
 import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
 import javax.swing.JList;
-import java.awt.Insets;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+
+import com.mycompany.shopcart.controller.ShopController;
+import com.mycompany.shopcart.model.Product;
+import com.mycompany.shopcart.view.ProductView;
 
 public class ShopSwingView extends JFrame implements ProductView {
 
@@ -50,22 +49,6 @@ public class ShopSwingView extends JFrame implements ProductView {
 	
 	public void setShopController(ShopController shopController) {
 		this.shopController = shopController;
-	}
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ShopSwingView frame = new ShopSwingView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	/**
