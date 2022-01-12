@@ -23,6 +23,7 @@
     <mongo.driver.version>3.12.7</mongo.driver.version>
     <mongo.java.server.version>1.37.0</mongo.java.server.version>
     <testcontainers.version>1.16.0</testcontainers.version>
+    <picocli.version>4.6.1</picocli.version>
     
      <!-- Plugins versions -->
     <build.helper.version>3.0.0</build.helper.version>
@@ -74,6 +75,11 @@
       <artifactId>mongodb</artifactId>
       <version>${testcontainers.version}</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>${picocli.version}</version>
     </dependency>
   </dependencies>
   

@@ -1,6 +1,7 @@
 package com.mycompany.shopcart.app.swing;
 
 import java.awt.EventQueue;
+import java.util.concurrent.Callable;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
@@ -8,21 +9,37 @@ import com.mycompany.shopcart.controller.ShopController;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 import com.mycompany.shopcart.view.swing.ShopSwingView;
 
-public class ShopSwingApp {
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
+@Command(mixinStandardHelpOptions = true)
+public class ShopSwingApp implements Callable<Void>{
+	
+	@Option(names = { "--mongo-host" }, description = "MongoDB host address")
+	private String mongoHost = "localhost";
+
+	@Option(names = { "--mongo-port" }, description = "MongoDB host port")
+	private int mongoPort = 27017;
+
+	@Option(names = { "--db-name" }, description = "Database name")
+	private String databaseName = "shop";
+
+	@Option(names = { "--db-collection" }, description = "Collection name")
+	private String collectionName = "product";
 	
 	public static void main(String[] args) {
+		new CommandLine(new ShopSwingApp()).execute(args);
+	}
+	
+	@Override
+	public Void call() throws Exception {
 		EventQueue.invokeLater(() -> {
 			try {
-				String mongoHost = "localhost";
-				int mongoPort = 27017;
-				if (args.length > 0)
-					mongoHost = args[0];
-				if (args.length > 1)
-					mongoPort = Integer.parseInt(args[1]);
 				ProductMongoRepository productRepository =
 						new ProductMongoRepository(
 								new MongoClient(new ServerAddress(mongoHost, mongoPort)),
-										"shop", "product");
+										databaseName, collectionName);
 				ShopSwingView shopView = new ShopSwingView();
 				ShopController shopController =
 						new ShopController(shopView, productRepository);
@@ -33,5 +50,6 @@ public class ShopSwingApp {
 				e.printStackTrace();
 			}
 		});
+		return null;
 	}
 }
