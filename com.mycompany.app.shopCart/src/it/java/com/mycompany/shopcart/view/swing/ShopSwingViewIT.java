@@ -39,7 +39,6 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
 	private FrameFixture window;
 	private MongoCollection<Document> productCollection;
 
-	
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String PRODUCT_COLLECTION_NAME = "product";
 
