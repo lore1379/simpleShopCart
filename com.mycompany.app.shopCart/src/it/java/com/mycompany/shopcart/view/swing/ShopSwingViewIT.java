@@ -134,6 +134,27 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
 			.isEmpty();
 	}
 	
+	@Test @GUITest
+	public void testCheckoutButtonSuccess() {
+		Product product1 = new Product("1", "test1");
+		Product product2 = new Product("2", "test2");
+		addTestProductToDatabase(product1.getId(), product1.getName());
+		addTestProductToDatabase(product2.getId(), product2.getName());
+		GuiActionRunner.execute(
+				() -> {
+					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+					listCartModel.addElement(product1);
+					listCartModel.addElement(product2);
+				}
+		);
+		window.list("cartList").selectItem(1);
+		window.button(JButtonMatcher.withText("Checkout")).click();
+		assertThat(window.list("productList").contents())
+			.isEmpty();
+		assertThat(window.list("cartList").contents())
+		.containsExactly(product1.toString());
+	}
+	
 	private void addTestProductToDatabase(String id, String name) {
 		productCollection.insertOne(
 				new Document()
