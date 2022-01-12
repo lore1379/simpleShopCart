@@ -90,8 +90,7 @@ public class ShopControllerTest {
 		Product productInCart = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(null);
 		shopController.checkoutProduct(productInCart);
-		verify(productView).showError("The product you are trying to buy is no longer available: ", productInCart);
-		verify(productView).checkoutProduct(productInCart);
+		verify(productView).showErrorProductNotFound("The product you are trying to buy is no longer available", productInCart);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 
