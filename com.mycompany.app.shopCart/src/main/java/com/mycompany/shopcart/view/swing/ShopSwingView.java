@@ -22,9 +22,6 @@ import com.mycompany.shopcart.view.ProductView;
 
 public class ShopSwingView extends JFrame implements ProductView {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel contentPane;
