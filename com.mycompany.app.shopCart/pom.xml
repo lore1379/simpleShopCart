@@ -119,6 +119,7 @@
 	          <configuration>
               <excludes>
                 <exclude>**/model/*.*</exclude>
+                <exclude>**/ShopSwingApp.*</exclude>
               </excludes>
             </configuration>
 	          <executions>
