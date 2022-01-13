@@ -111,6 +111,20 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_1_NAME));
 	}
 	
+	@Test @GUITest
+	public void testCheckoutButtonSuccessAfterBuyButtonSuccess() {
+		window.list("productList")
+			.selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
+		window.button(JButtonMatcher.withText("Buy Selected")).click();
+		assertThat(window.list("cartList").contents())
+			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_1_NAME));
+		window.list("cartList")
+			.selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
+		window.button(JButtonMatcher.withText("Checkout")).click();
+		assertThat(window.list("cartList").contents())
+			.noneMatch(e -> e.contains(PRODUCT_FIXTURE_1_NAME));
+	}
+	
 	private void addTestProductToDatabase(String id, String name) {
 		mongoClient
 			.getDatabase(DB_NAME)
