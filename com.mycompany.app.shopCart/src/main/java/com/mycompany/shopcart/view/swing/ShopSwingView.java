@@ -37,7 +37,7 @@ public class ShopSwingView extends JFrame implements ProductView {
 	private DefaultListModel<Product> listProductsModel;
 	private DefaultListModel<Product> listCartModel;
 	
-	private ShopController shopController;
+	private transient ShopController shopController;
 
 	DefaultListModel<Product> getListCartModel() {
 		return listCartModel;
