@@ -3,6 +3,9 @@ package com.mycompany.shopcart.app.swing;
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mycompany.shopcart.controller.ShopController;
@@ -15,6 +18,8 @@ import picocli.CommandLine.Option;
 
 @Command(mixinStandardHelpOptions = true)
 public class ShopSwingApp implements Callable<Void>{
+	
+	private static final Logger LOGGER = LogManager.getLogger(ShopSwingApp.class);
 	
 	@Option(names = { "--mongo-host" }, description = "MongoDB host address")
 	private String mongoHost = "localhost";
@@ -47,7 +52,7 @@ public class ShopSwingApp implements Callable<Void>{
 				shopView.setVisible(true);
 				shopController.allProducts();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Exception", e);
 			}
 		});
 		return null;
