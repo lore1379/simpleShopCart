@@ -1,9 +1,11 @@
 package com.mycompany.shopcart.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.swing.launcher.ApplicationLauncher.application;
 
 import javax.swing.JFrame;
 
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.FrameFixture;
@@ -11,6 +13,7 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.bson.Document;
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.containers.MongoDBContainer;
 
@@ -57,6 +60,13 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Override
 	protected void onTearDown() {
 		mongoClient.close();
+	}
+	
+	@Test @GUITest
+	public void testOnStartAllDatabaseElementsAreShown() {
+		assertThat(window.list("productList").contents())
+			.anySatisfy(e -> assertThat(e).contains("1", "first product"))
+			.anySatisfy(e -> assertThat(e).contains("2", "second product"));
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {
