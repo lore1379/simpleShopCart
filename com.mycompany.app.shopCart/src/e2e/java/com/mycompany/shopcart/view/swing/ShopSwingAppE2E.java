@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
+import com.mongodb.client.model.Filters;
 
 @RunWith(GUITestRunner.class)
 public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
@@ -79,10 +80,21 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 	
 	@Test @GUITest
 	public void testBuyButtonSuccess() {
-		window.list("productList").selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
+		window.list("productList")
+			.selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
 		window.button(JButtonMatcher.withText("Buy Selected")).click();
 		assertThat(window.list("cartList").contents())
 			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_1_NAME));
+	}
+	
+	@Test @GUITest
+	public void testBuyButtonError() {
+		window.list("productList")
+			.selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
+		removeTestProductFromDatabase(PRODUCT_FIXTURE_1_ID);
+		window.button(JButtonMatcher.withText("Buy Selected")).click();
+		assertThat(window.label("errorMessageLabel").text())
+			.contains(PRODUCT_FIXTURE_1_NAME);
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {
@@ -93,5 +105,12 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 				new Document()
 					.append("id", id)
 					.append("name", name));
+	}
+	
+	private void removeTestProductFromDatabase(String id) {
+		mongoClient
+			.getDatabase(DB_NAME)
+			.getCollection(COLLECTION_NAME)
+			.deleteOne(Filters.eq("id", id));
 	}
 }
