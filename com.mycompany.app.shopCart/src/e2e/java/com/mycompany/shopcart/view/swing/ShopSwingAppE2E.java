@@ -81,8 +81,6 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 	public void testBuyButtonSuccess() {
 		window.list("productList").selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
 		window.button(JButtonMatcher.withText("Buy Selected")).click();
-		assertThat(window.list("productList").contents())
-			.noneMatch(e -> e.contains(PRODUCT_FIXTURE_1_NAME));
 		assertThat(window.list("cartList").contents())
 			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_1_NAME));
 	}
