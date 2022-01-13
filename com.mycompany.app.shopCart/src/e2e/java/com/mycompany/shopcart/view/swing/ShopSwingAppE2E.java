@@ -29,6 +29,11 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 	private static final String DB_NAME = "test-db";
 	private static final String COLLECTION_NAME = "test-collection";
 	
+	private static final String PRODUCT_FIXTURE_1_ID = "1";
+	private static final String PRODUCT_FIXTURE_1_NAME = "first product";
+	private static final String PRODUCT_FIXTURE_2_ID = "2";
+	private static final String PRODUCT_FIXTURE_2_NAME = "second product";
+	
 	private MongoClient mongoClient;
 
 	private FrameFixture window;
@@ -39,8 +44,8 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 		Integer mappedPort = mongo.getFirstMappedPort();
 		mongoClient = new MongoClient(containerIpAddress, mappedPort);
 		mongoClient.getDatabase(DB_NAME).drop();
-		addTestProductToDatabase("1", "first product");
-		addTestProductToDatabase("2", "second product");
+		addTestProductToDatabase(PRODUCT_FIXTURE_1_ID, PRODUCT_FIXTURE_1_NAME);
+		addTestProductToDatabase(PRODUCT_FIXTURE_2_ID, PRODUCT_FIXTURE_2_NAME);
 		application("com.mycompany.shopcart.app.swing.ShopSwingApp")
 			.withArgs(
 				"--mongo-host=" + containerIpAddress,
@@ -65,8 +70,8 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 	@Test @GUITest
 	public void testOnStartAllDatabaseElementsAreShown() {
 		assertThat(window.list("productList").contents())
-			.anySatisfy(e -> assertThat(e).contains("1", "first product"))
-			.anySatisfy(e -> assertThat(e).contains("2", "second product"));
+			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_1_ID, PRODUCT_FIXTURE_1_NAME))
+			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_2_ID, PRODUCT_FIXTURE_2_NAME));
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {
