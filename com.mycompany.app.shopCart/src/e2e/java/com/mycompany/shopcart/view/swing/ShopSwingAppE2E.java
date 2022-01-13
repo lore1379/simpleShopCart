@@ -3,10 +3,13 @@ package com.mycompany.shopcart.view.swing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.swing.launcher.ApplicationLauncher.application;
 
+import java.util.regex.Pattern;
+
 import javax.swing.JFrame;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.GenericTypeMatcher;
+import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.finder.WindowFinder;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
@@ -72,6 +75,16 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 		assertThat(window.list("productList").contents())
 			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_1_ID, PRODUCT_FIXTURE_1_NAME))
 			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_2_ID, PRODUCT_FIXTURE_2_NAME));
+	}
+	
+	@Test @GUITest
+	public void testBuyButtonSuccess() {
+		window.list("productList").selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
+		window.button(JButtonMatcher.withText("Buy Selected")).click();
+		assertThat(window.list("productList").contents())
+			.noneMatch(e -> e.contains(PRODUCT_FIXTURE_1_NAME));
+		assertThat(window.list("cartList").contents())
+			.anySatisfy(e -> assertThat(e).contains(PRODUCT_FIXTURE_1_NAME));
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {
