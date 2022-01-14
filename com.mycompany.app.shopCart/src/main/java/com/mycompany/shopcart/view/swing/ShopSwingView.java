@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.JScrollPane;
 import javax.swing.DefaultListModel;
@@ -188,8 +189,10 @@ public class ShopSwingView extends JFrame implements ProductView {
 
 	@Override
 	public void checkoutProduct(Product product) {
-		listCartModel.removeElement(product);
-		resetErrorLabel();
+		SwingUtilities.invokeLater(() -> {
+			listCartModel.removeElement(product);
+			resetErrorLabel();	
+		});
 	}
 	
 	@Override
