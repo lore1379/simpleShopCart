@@ -163,10 +163,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 					listCartModel.addElement(product2);
 				}
 				);
-		GuiActionRunner.execute(
-				() ->
-				shopSwingView.removeProductFromCart(product1)
-				);
+		shopSwingView.removeProductFromCart(product1);
 		String[] productListContents = window.list("productList").contents();
 		assertThat(productListContents).containsExactly(product1.toString());
 		String[] cartListContents = window.list("cartList").contents();
