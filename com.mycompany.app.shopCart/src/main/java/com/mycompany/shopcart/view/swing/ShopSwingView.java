@@ -172,9 +172,11 @@ public class ShopSwingView extends JFrame implements ProductView {
 
 	@Override
 	public void addProductToCart(Product product) {
-		listProductsModel.removeElement(product);
-		listCartModel.addElement(product);
-		resetErrorLabel();
+		SwingUtilities.invokeLater(() -> {
+			listProductsModel.removeElement(product);
+			listCartModel.addElement(product);
+			resetErrorLabel();			
+		});
 	}
 
 	@Override
