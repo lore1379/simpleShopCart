@@ -195,9 +195,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 					listCartModel.addElement(product2);
 				}
 		);
-		GuiActionRunner.execute(
-				() -> shopSwingView.checkoutProduct(new Product("1", "test1"))
-		);
+		shopSwingView.checkoutProduct(new Product("1", "test1"));
 		String[] listContents = window.list("cartList").contents();
 		assertThat(listContents).containsExactly(product2.toString());
 		window.label("errorMessageLabel").requireText(" ");
