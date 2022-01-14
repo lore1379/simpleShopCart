@@ -125,9 +125,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 					listCartModel.addElement(product2);
 				}
 		);
-		GuiActionRunner.execute(
-				() -> shopSwingView.showErrorProductNotFound("error message", product1)
-		);
+		shopSwingView.showErrorProductNotFound("error message", product1);
 		window.label("errorMessageLabel")
 			.requireText("error message: " + product1.getName());
 		assertThat(window.list("cartList").contents())
