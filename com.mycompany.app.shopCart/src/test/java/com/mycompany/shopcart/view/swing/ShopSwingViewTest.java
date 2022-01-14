@@ -111,9 +111,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testShowErrorShouldShowTheMessageInTheErrorLabel() {
 		Product product = new Product("1", "test1");
-		GuiActionRunner.execute(
-			() -> shopSwingView.showError("error message", product)
-		);
+		shopSwingView.showError("error message", product);
 		window.label("errorMessageLabel")
 			.requireText("error message: " + product.getName());
 	}
