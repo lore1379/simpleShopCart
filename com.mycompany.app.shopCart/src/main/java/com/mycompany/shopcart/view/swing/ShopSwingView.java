@@ -184,7 +184,9 @@ public class ShopSwingView extends JFrame implements ProductView {
 
 	@Override
 	public void showError(String message, Product product) {
-		lblErrorMessage.setText(message + ": " + product.getName() );
+		SwingUtilities.invokeLater(() -> 
+		lblErrorMessage.setText(message + ": " + product.getName())
+		);
 	}
 
 	@Override
