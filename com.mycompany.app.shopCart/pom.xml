@@ -24,6 +24,7 @@
     <mongo.java.server.version>1.37.0</mongo.java.server.version>
     <testcontainers.version>1.16.0</testcontainers.version>
     <picocli.version>4.6.1</picocli.version>
+    <awaitility.version>4.1.1</awaitility.version>
     
      <!-- Plugins versions -->
     <build.helper.version>3.0.0</build.helper.version>
@@ -127,6 +128,12 @@
       <artifactId>log4j-core</artifactId>
       <version>2.13.0</version>
     </dependency>
+    <dependency>
+  		<groupId>org.awaitility</groupId>
+  		<artifactId>awaitility</artifactId>
+  		<version>${awaitility.version}</version>
+  		<scope>test</scope>
+  </dependency>
   </dependencies>
   
   <build>
