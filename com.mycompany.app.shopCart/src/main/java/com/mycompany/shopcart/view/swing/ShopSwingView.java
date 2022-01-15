@@ -145,7 +145,10 @@ public class ShopSwingView extends JFrame implements ProductView {
 		btnCheckout = new JButton("Checkout");
 		btnCheckout.setEnabled(false);
 		btnCheckout.addActionListener(
-				e -> shopController.checkoutProduct(listCart.getSelectedValue()));
+				e -> new Thread(() -> 
+						shopController.checkoutProduct(listCart.getSelectedValue())
+				).start()
+		);
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.gridwidth = 2;
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
