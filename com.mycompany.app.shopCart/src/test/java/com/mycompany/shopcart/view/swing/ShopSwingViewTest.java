@@ -2,8 +2,10 @@ package com.mycompany.shopcart.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.awaitility.Awaitility.*;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.DefaultListModel;
 
@@ -250,6 +252,8 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 				);
 		window.list("cartList").selectItem(1);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		verify(shopController).checkoutProduct(product2);
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			verify(shopController).checkoutProduct(product2)
+			);
 	}
 }

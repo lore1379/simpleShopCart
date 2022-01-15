@@ -1,8 +1,10 @@
 package com.mycompany.shopcart.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.*;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.DefaultListModel;
 
@@ -148,10 +150,12 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
 		);
 		window.list("cartList").selectItem(1);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		assertThat(window.list("productList").contents())
-			.isEmpty();
-		assertThat(window.list("cartList").contents())
-		.containsExactly(product1.toString());
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+			assertThat(window.list("productList").contents())
+				.isEmpty();
+			assertThat(window.list("cartList").contents())
+			.containsExactly(product1.toString());
+		});
 	}
 	
 	@Test @GUITest
@@ -161,12 +165,14 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
 				() -> shopSwingView.getListCartModel().addElement(product));
 		window.list("cartList").selectItem(0);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		window.label("errorMessageLabel")
-			.requireText("The product you are trying to buy is no longer available: " + product.getName());
-		assertThat(window.list("productList").contents())
-			.isEmpty();
-		assertThat(window.list("cartList").contents())
-			.isEmpty();
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
+			window.label("errorMessageLabel")
+				.requireText("The product you are trying to buy is no longer available: " + product.getName());
+			assertThat(window.list("productList").contents())
+				.isEmpty();
+			assertThat(window.list("cartList").contents())
+				.isEmpty();
+		});
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {

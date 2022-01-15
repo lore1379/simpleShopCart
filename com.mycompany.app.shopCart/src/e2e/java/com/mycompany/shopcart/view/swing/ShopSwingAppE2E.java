@@ -2,7 +2,9 @@ package com.mycompany.shopcart.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.swing.launcher.ApplicationLauncher.application;
+import static org.awaitility.Awaitility.*;
 
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
@@ -121,8 +123,10 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 		window.list("cartList")
 			.selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
 		window.button(JButtonMatcher.withText("Checkout")).click();
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
 		assertThat(window.list("cartList").contents())
-			.noneMatch(e -> e.contains(PRODUCT_FIXTURE_1_NAME));
+			.noneMatch(e -> e.contains(PRODUCT_FIXTURE_1_NAME))
+		);
 	}
 	
 	@Test @GUITest
@@ -136,8 +140,10 @@ public class ShopSwingAppE2E extends AssertJSwingJUnitTestCase {
 			.selectItem(Pattern.compile(".*" + PRODUCT_FIXTURE_1_NAME + ".*"));
 		removeTestProductFromDatabase(PRODUCT_FIXTURE_1_ID);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		assertThat(window.label("errorMessageLabel").text())
-		.contains(PRODUCT_FIXTURE_1_NAME);
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			assertThat(window.label("errorMessageLabel").text())
+			.contains(PRODUCT_FIXTURE_1_NAME)
+		);
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {

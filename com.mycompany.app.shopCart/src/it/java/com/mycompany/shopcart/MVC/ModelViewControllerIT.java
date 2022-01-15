@@ -1,6 +1,9 @@
 package com.mycompany.shopcart.MVC;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.*;
+
+import java.util.concurrent.TimeUnit;
 
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
@@ -72,7 +75,9 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Buy Selected")).click();
 		window.list("cartList").selectItem(0);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		assertThat(productRepository.findById("99")).isNull();
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			assertThat(productRepository.findById("99")).isNull()
+		);
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {
