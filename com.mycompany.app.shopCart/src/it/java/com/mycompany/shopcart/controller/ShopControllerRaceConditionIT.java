@@ -1,4 +1,4 @@
-package com.mycompany.shopcart.view.swing;
+package com.mycompany.shopcart.controller;
 
 import static org.awaitility.Awaitility.*;
 import static org.mockito.Mockito.times;
@@ -24,13 +24,12 @@ import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mycompany.shopcart.controller.ShopController;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 import com.mycompany.shopcart.view.ProductView;
 
 @RunWith(GUITestRunner.class)
-public class ShopSwingViewRaceConditionIT extends AssertJSwingJUnitTestCase {
+public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
 		
 	@ClassRule
 	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
