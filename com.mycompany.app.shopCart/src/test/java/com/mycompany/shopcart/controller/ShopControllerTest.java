@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.ProductRepository;
-import com.mycompany.shopcart.view.ProductView;
+import com.mycompany.shopcart.view.ShopView;
 
 public class ShopControllerTest {
 	
@@ -23,7 +23,7 @@ public class ShopControllerTest {
 	private ProductRepository productRepository;
 	
 	@Mock
-	private ProductView productView;
+	private ShopView productView;
 	
 	@InjectMocks
 	private ShopController shopController;

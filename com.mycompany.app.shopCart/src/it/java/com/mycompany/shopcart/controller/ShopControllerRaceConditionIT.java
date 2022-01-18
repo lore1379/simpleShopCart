@@ -26,7 +26,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepositoryInTransaction;
-import com.mycompany.shopcart.view.ProductView;
+import com.mycompany.shopcart.view.ShopView;
 
 @RunWith(GUITestRunner.class)
 public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
@@ -35,7 +35,7 @@ public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
 	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
 	
 	@Mock
-	private ProductView productView;
+	private ShopView productView;
 	
 	private MongoClient mongoClient;
 	private ProductMongoRepositoryInTransaction productRepository;

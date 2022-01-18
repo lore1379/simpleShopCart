@@ -16,12 +16,12 @@ import com.mongodb.client.MongoDatabase;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.ProductRepository;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
-import com.mycompany.shopcart.view.ProductView;
+import com.mycompany.shopcart.view.ShopView;
 
 public class ShopControllerIT {
 
 	@Mock
-	private ProductView productView;
+	private ShopView productView;
 
 	private ProductRepository productRepository;
 	

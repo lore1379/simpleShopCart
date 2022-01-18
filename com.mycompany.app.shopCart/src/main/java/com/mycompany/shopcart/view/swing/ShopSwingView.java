@@ -19,9 +19,9 @@ import javax.swing.JButton;
 
 import com.mycompany.shopcart.controller.ShopController;
 import com.mycompany.shopcart.model.Product;
-import com.mycompany.shopcart.view.ProductView;
+import com.mycompany.shopcart.view.ShopView;
 
-public class ShopSwingView extends JFrame implements ProductView {
+public class ShopSwingView extends JFrame implements ShopView {
 
 	private static final long serialVersionUID = 1L;
 	

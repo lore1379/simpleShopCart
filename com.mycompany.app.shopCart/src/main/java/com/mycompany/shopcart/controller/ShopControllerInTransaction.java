@@ -11,17 +11,17 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepositoryInTransaction;
-import com.mycompany.shopcart.view.ProductView;
+import com.mycompany.shopcart.view.ShopView;
 
 public class ShopControllerInTransaction {
 	
 	private static final Logger LOGGER = LogManager.getLogger(ShopControllerInTransaction.class);
 
-	private ProductView productView;
+	private ShopView productView;
 	private ProductMongoRepositoryInTransaction productRepository;
 	private MongoClient mongoClient;
 	
-	public ShopControllerInTransaction (MongoClient mongoClient, ProductView productView, ProductMongoRepositoryInTransaction productRepository) {
+	public ShopControllerInTransaction (MongoClient mongoClient, ShopView productView, ProductMongoRepositoryInTransaction productRepository) {
 		this.mongoClient = mongoClient;
 		this.productView = productView;
 		this.productRepository = productRepository;

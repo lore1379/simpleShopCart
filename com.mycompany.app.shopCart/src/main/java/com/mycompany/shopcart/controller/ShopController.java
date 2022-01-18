@@ -2,14 +2,14 @@ package com.mycompany.shopcart.controller;
 
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.ProductRepository;
-import com.mycompany.shopcart.view.ProductView;
+import com.mycompany.shopcart.view.ShopView;
 
 public class ShopController {
 	
-	private ProductView productView;
+	private ShopView productView;
 	private ProductRepository productRepository;
 	
-	public ShopController(ProductView productView, ProductRepository productRepository) {
+	public ShopController(ShopView productView, ProductRepository productRepository) {
 		this.productView = productView;
 		this.productRepository = productRepository;
 	}
