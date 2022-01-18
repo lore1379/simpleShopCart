@@ -25,7 +25,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mycompany.shopcart.model.Product;
-import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
+import com.mycompany.shopcart.repository.mongo.ProductMongoRepositoryInTransaction;
 import com.mycompany.shopcart.view.ProductView;
 
 @RunWith(GUITestRunner.class)
@@ -38,7 +38,7 @@ public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
 	private ProductView productView;
 	
 	private MongoClient mongoClient;
-	private ProductMongoRepository productRepository;
+	private ProductMongoRepositoryInTransaction productRepository;
 	private MongoCollection<Document> productCollection;
 	private AutoCloseable closeable;
 	
@@ -52,7 +52,7 @@ public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
 				new ServerAddress(
 						mongo.getContainerIpAddress(),
 						mongo.getFirstMappedPort()));
-		productRepository = new ProductMongoRepository(mongoClient, SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
+		productRepository = new ProductMongoRepositoryInTransaction(mongoClient, SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
 		MongoDatabase database = mongoClient.getDatabase(SHOP_DB_NAME);
 		database.drop();
 		productCollection = database.getCollection(PRODUCT_COLLECTION_NAME);
@@ -71,7 +71,7 @@ public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
 		List<Thread> threads = IntStream.range(0, 10)
 				.mapToObj(i -> new Thread(
 						() -> 
-						new ShopController(productView, productRepository).checkoutProduct(mongoClient, product)))
+						new ShopControllerInTransaction(mongoClient, productView, productRepository).checkoutProduct(product)))
 				.peek(t -> t.start())
 				.collect(Collectors.toList());
 		await().atMost(10, TimeUnit.SECONDS)
