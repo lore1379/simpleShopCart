@@ -6,41 +6,41 @@ import com.mycompany.shopcart.view.ShopView;
 
 public class ShopController {
 
-	private ShopView productView;
+	private ShopView shopView;
 	private ProductRepository productRepository;
 
 	public ShopController(ShopView productView, ProductRepository productRepository) {
-		this.productView = productView;
+		this.shopView = productView;
 		this.productRepository = productRepository;
 	}
 
 	public void allProducts() {
-		productView.showAllProducts(productRepository.findAll());
+		shopView.showAllProducts(productRepository.findAll());
 	}
 
 	public void buyProduct(Product productToBuy) {
 		final Product availableProduct = productRepository.findById(productToBuy.getId());
 		if (availableProduct == null) {
-			productView.showError("The product you are trying to buy is no longer available", productToBuy);
-			productView.removeProductFromShop(productToBuy);
+			shopView.showError("The product you are trying to buy is no longer available", productToBuy);
+			shopView.removeProductFromShop(productToBuy);
 			return;
 		}
-		productView.addProductToCart(productRepository.findById(productToBuy.getId()));
+		shopView.addProductToCart(productRepository.findById(productToBuy.getId()));
 	}
 
 	public void removeProduct(Product productToRemove) {
-		productView.removeProductFromCart(productToRemove);
+		shopView.removeProductFromCart(productToRemove);
 	}
 
 	public void checkoutProduct(Product productInCart) {
 		final Product availableProduct = productRepository.findById(productInCart.getId());
 		if (availableProduct == null) {
-			productView.showErrorProductNotFound("The product you are trying to buy is no longer available",
+			shopView.showErrorProductNotFound("The product you are trying to buy is no longer available",
 					productInCart);
 			return;
 		}
 		productRepository.delete(availableProduct.getId());
-		productView.checkoutProduct(availableProduct);
+		shopView.checkoutProduct(availableProduct);
 	}
 
 }

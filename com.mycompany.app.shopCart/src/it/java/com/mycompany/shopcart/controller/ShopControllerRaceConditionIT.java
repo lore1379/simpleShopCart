@@ -35,7 +35,7 @@ public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
 	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
 
 	@Mock
-	private ShopView productView;
+	private ShopView shopView;
 
 	private MongoClient mongoClient;
 	private ProductMongoRepositoryInTransaction productRepository;
@@ -73,14 +73,14 @@ public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
 		List<Thread> threads = IntStream.range(0, 10)
 				.mapToObj(i -> new Thread(
 						() -> 
-						new ShopControllerInTransaction(mongoClient, productView, productRepository)
+						new ShopControllerInTransaction(mongoClient, shopView, productRepository)
 							.checkoutProduct(product)))
 				.peek(t -> t.start())
 				.collect(Collectors.toList());
 		await().atMost(10, TimeUnit.SECONDS)
 		.until(() -> threads.stream().noneMatch(t -> t.isAlive()));
-		verify(productView, times(1)).checkoutProduct(product);
-		verify(productView, times(9))
+		verify(shopView, times(1)).checkoutProduct(product);
+		verify(shopView, times(9))
 				.showErrorProductNotFound("The product you are trying to buy is no longer available", product);
 	}
 

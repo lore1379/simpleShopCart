@@ -21,7 +21,7 @@ import com.mycompany.shopcart.view.ShopView;
 public class ShopControllerIT {
 
 	@Mock
-	private ShopView productView;
+	private ShopView shopView;
 
 	private ProductRepository productRepository;
 
@@ -47,7 +47,7 @@ public class ShopControllerIT {
 				SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
 		MongoDatabase database = mongoClient.getDatabase(SHOP_DB_NAME);
 		database.drop();
-		shopController = new ShopController(productView, productRepository);
+		shopController = new ShopController(shopView, productRepository);
 		productCollection = database.getCollection(PRODUCT_COLLECTION_NAME);
 	}
 
@@ -62,7 +62,7 @@ public class ShopControllerIT {
 		Product product = new Product("1", "test");
 		addTestProductToDatabase(product.getId(), product.getName());
 		shopController.allProducts();
-		verify(productView).showAllProducts(asList(product));
+		verify(shopView).showAllProducts(asList(product));
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class ShopControllerIT {
 		Product product = new Product("1", "test");
 		addTestProductToDatabase(product.getId(), product.getName());
 		shopController.buyProduct(product);
-		verify(productView).addProductToCart(product);
+		verify(shopView).addProductToCart(product);
 
 	}
 
@@ -79,7 +79,7 @@ public class ShopControllerIT {
 		Product product = new Product("1", "test");
 		addTestProductToDatabase(product.getId(), product.getName());
 		shopController.removeProduct(product);
-		verify(productView).removeProductFromCart(product);
+		verify(shopView).removeProductFromCart(product);
 
 	}
 
@@ -88,7 +88,7 @@ public class ShopControllerIT {
 		Product productToCheckout = new Product("1", "test");
 		addTestProductToDatabase(productToCheckout.getId(), productToCheckout.getName());
 		shopController.checkoutProduct(productToCheckout);
-		verify(productView).checkoutProduct(productToCheckout);
+		verify(shopView).checkoutProduct(productToCheckout);
 
 	}
 

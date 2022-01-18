@@ -17,14 +17,14 @@ public class ShopControllerInTransaction {
 
 	private static final Logger LOGGER = LogManager.getLogger(ShopControllerInTransaction.class);
 
-	private ShopView productView;
+	private ShopView shopView;
 	private ProductMongoRepositoryInTransaction productRepository;
 	private MongoClient mongoClient;
 
 	public ShopControllerInTransaction(MongoClient mongoClient, ShopView productView,
 			ProductMongoRepositoryInTransaction productRepository) {
 		this.mongoClient = mongoClient;
-		this.productView = productView;
+		this.shopView = productView;
 		this.productRepository = productRepository;
 	}
 
@@ -34,17 +34,17 @@ public class ShopControllerInTransaction {
 			session.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).build());
 			final Product availableProduct = productRepository.findById(productInCart.getId());
 			if (availableProduct == null) {
-				productView.showErrorProductNotFound("The product you are trying to buy is no longer available",
+				shopView.showErrorProductNotFound("The product you are trying to buy is no longer available",
 						productInCart);
 				return;
 			}
 			productRepository.delete(session, availableProduct.getId());
-			productView.checkoutProduct(availableProduct);
+			shopView.checkoutProduct(availableProduct);
 			sleep();
 			session.commitTransaction();
 		} catch (MongoCommandException | MongoWriteException e) {
 			session.abortTransaction();
-			productView.showErrorProductNotFound("The product you are trying to buy is no longer available",
+			shopView.showErrorProductNotFound("The product you are trying to buy is no longer available",
 					productInCart);
 		} finally {
 			session.close();

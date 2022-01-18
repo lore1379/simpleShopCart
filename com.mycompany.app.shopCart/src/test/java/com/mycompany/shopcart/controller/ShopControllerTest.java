@@ -23,7 +23,7 @@ public class ShopControllerTest {
 	private ProductRepository productRepository;
 
 	@Mock
-	private ShopView productView;
+	private ShopView shopView;
 
 	@InjectMocks
 	private ShopController shopController;
@@ -45,7 +45,7 @@ public class ShopControllerTest {
 		List<Product> products = asList(new Product());
 		when(productRepository.findAll()).thenReturn(products);
 		shopController.allProducts();
-		verify(productView).showAllProducts(products);
+		verify(shopView).showAllProducts(products);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class ShopControllerTest {
 		Product productToBuy = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(productToBuy);
 		shopController.buyProduct(productToBuy);
-		verify(productView).addProductToCart(productToBuy);
+		verify(shopView).addProductToCart(productToBuy);
 
 	}
 
@@ -62,8 +62,8 @@ public class ShopControllerTest {
 		Product productToBuy = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(null);
 		shopController.buyProduct(productToBuy);
-		verify(productView).showError("The product you are trying to buy is no longer available", productToBuy);
-		verify(productView).removeProductFromShop(productToBuy);
+		verify(shopView).showError("The product you are trying to buy is no longer available", productToBuy);
+		verify(shopView).removeProductFromShop(productToBuy);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 
@@ -71,7 +71,7 @@ public class ShopControllerTest {
 	public void testRemoveProduct() {
 		Product productToRemove = new Product("1", "test");
 		shopController.removeProduct(productToRemove);
-		verify(productView).removeProductFromCart(productToRemove);
+		verify(shopView).removeProductFromCart(productToRemove);
 	}
 
 	@Test
@@ -79,9 +79,9 @@ public class ShopControllerTest {
 		Product productInCart = new Product("1", "test1");
 		when(productRepository.findById("1")).thenReturn(productInCart);
 		shopController.checkoutProduct(productInCart);
-		InOrder inOrder = inOrder(productRepository, productView);
+		InOrder inOrder = inOrder(productRepository, shopView);
 		inOrder.verify(productRepository).delete("1");
-		inOrder.verify(productView).checkoutProduct(productInCart);
+		inOrder.verify(shopView).checkoutProduct(productInCart);
 	}
 
 	@Test
@@ -89,7 +89,7 @@ public class ShopControllerTest {
 		Product productInCart = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(null);
 		shopController.checkoutProduct(productInCart);
-		verify(productView).showErrorProductNotFound("The product you are trying to buy is no longer available",
+		verify(shopView).showErrorProductNotFound("The product you are trying to buy is no longer available",
 				productInCart);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
