@@ -13,10 +13,10 @@ import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.ProductRepository;
 
 public class ProductMongoRepository implements ProductRepository {
-	
+
 	private MongoCollection<Document> productCollection;
 
-	public ProductMongoRepository(MongoClient mongoClient,
+	public ProductMongoRepository(MongoClient mongoClient, 
 			String shopDbName, String productCollectionName) {
 		productCollection = mongoClient
 				.getDatabase(shopDbName)
@@ -25,8 +25,8 @@ public class ProductMongoRepository implements ProductRepository {
 
 	@Override
 	public List<Product> findAll() {
-		return StreamSupport.
-				stream(productCollection.find().spliterator(), false)
+		return StreamSupport
+				.stream(productCollection.find().spliterator(), false)
 				.map(this::fromDocumentToProduct)
 				.collect(Collectors.toList());
 	}
@@ -43,9 +43,9 @@ public class ProductMongoRepository implements ProductRepository {
 	public void delete(String id) {
 		productCollection.deleteOne(Filters.eq("id", id));
 	}
-	
+
 	private Product fromDocumentToProduct(Document d) {
-		return new Product(""+d.get("id"), ""+d.get("name"));
+		return new Product("" + d.get("id"), "" + d.get("name"));
 	}
 
 }

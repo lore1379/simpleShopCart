@@ -18,37 +18,36 @@ import com.mycompany.shopcart.repository.ProductRepository;
 import com.mycompany.shopcart.view.ShopView;
 
 public class ShopControllerTest {
-	
+
 	@Mock
 	private ProductRepository productRepository;
-	
+
 	@Mock
 	private ShopView productView;
-	
+
 	@InjectMocks
 	private ShopController shopController;
-	
+
 	private AutoCloseable closeable;
-	
+
 	@Before
 	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
 	}
-	
+
 	@After
 	public void releaseMocks() throws Exception {
-        closeable.close();
-    }
+		closeable.close();
+	}
 
 	@Test
-	public void testAllProducts () {
+	public void testAllProducts() {
 		List<Product> products = asList(new Product());
-		when(productRepository.findAll())
-			.thenReturn(products);
+		when(productRepository.findAll()).thenReturn(products);
 		shopController.allProducts();
 		verify(productView).showAllProducts(products);
 	}
-	
+
 	@Test
 	public void testBuyProductWhenProductIsInDatabase() {
 		Product productToBuy = new Product("1", "test");
@@ -57,7 +56,7 @@ public class ShopControllerTest {
 		verify(productView).addProductToCart(productToBuy);
 
 	}
-	
+
 	@Test
 	public void testBuyProductWhenProductIsNotInDatabase() {
 		Product productToBuy = new Product("1", "test");
@@ -67,14 +66,14 @@ public class ShopControllerTest {
 		verify(productView).removeProductFromShop(productToBuy);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
-	
+
 	@Test
 	public void testRemoveProduct() {
 		Product productToRemove = new Product("1", "test");
 		shopController.removeProduct(productToRemove);
 		verify(productView).removeProductFromCart(productToRemove);
 	}
-	
+
 	@Test
 	public void testCheckoutProductWhenProductIsInDatabase() {
 		Product productInCart = new Product("1", "test1");
@@ -84,13 +83,14 @@ public class ShopControllerTest {
 		inOrder.verify(productRepository).delete("1");
 		inOrder.verify(productView).checkoutProduct(productInCart);
 	}
-	
+
 	@Test
 	public void testCheckoutProductWhenProductIsNotInDatabase() {
 		Product productInCart = new Product("1", "test");
 		when(productRepository.findById("1")).thenReturn(null);
 		shopController.checkoutProduct(productInCart);
-		verify(productView).showErrorProductNotFound("The product you are trying to buy is no longer available", productInCart);
+		verify(productView).showErrorProductNotFound("The product you are trying to buy is no longer available",
+				productInCart);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 

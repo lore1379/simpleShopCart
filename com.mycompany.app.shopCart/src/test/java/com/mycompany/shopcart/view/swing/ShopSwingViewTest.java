@@ -30,10 +30,10 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 	private FrameFixture window;
 
 	private ShopSwingView shopSwingView;
-	
+
 	@Mock
 	private ShopController shopController;
-	
+
 	private AutoCloseable closeable;
 
 	@Override
@@ -47,14 +47,14 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window = new FrameFixture(robot(), shopSwingView);
 		window.show();
 	}
-	
+
 	@Override
 	protected void onTearDown() throws Exception {
 		closeable.close();
 	}
 
-	
-	@Test @GUITest
+	@Test
+	@GUITest
 	public void testControlsInitialStates() {
 		window.list("productList");
 		window.button(JButtonMatcher.withText("Buy Selected")).requireDisabled();
@@ -63,18 +63,17 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Checkout")).requireDisabled();
 		window.label("errorMessageLabel").requireText(" ");
 	}
-	
+
 	@Test
 	public void testBuyButtonShouldBeEnabledOnlyWhenAProductIsSelectedInShop() {
 		GuiActionRunner.execute(() -> shopSwingView.getListProductsModel().addElement(new Product("1", "test")));
 		window.list("productList").selectItem(0);
-		JButtonFixture buyButton = 
-				window.button(JButtonMatcher.withText("Buy Selected"));
+		JButtonFixture buyButton = window.button(JButtonMatcher.withText("Buy Selected"));
 		buyButton.requireEnabled();
 		window.list("productList").clearSelection();
 		buyButton.requireDisabled();
 	}
-	
+
 	@Test
 	public void testRemoveButtonShouldBeEnabledOnlyWhenAProductIsSelectedInCart() {
 		GuiActionRunner.execute(() -> shopSwingView.getListCartModel().addElement(new Product("1", "test")));
@@ -85,7 +84,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("cartList").clearSelection();
 		removeButton.requireDisabled();
 	}
-	
+
 	@Test
 	public void testCheckoutButtonShouldBeEnabledOnlyWhenAProductIsSelectedInCart() {
 		GuiActionRunner.execute(() -> shopSwingView.getListCartModel().addElement(new Product("1", "test")));
@@ -96,56 +95,47 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("cartList").clearSelection();
 		checkoutButton.requireDisabled();
 	}
-	
+
 	@Test
 	public void testsShowAllProductsShouldAddProductDescriptionToProductsList() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		shopSwingView.showAllProducts(
-						Arrays.asList(product1, product2));
+		shopSwingView.showAllProducts(Arrays.asList(product1, product2));
 		String[] listContents = window.list("productList").contents();
-		assertThat(listContents)
-			.containsExactly(product1.toString(), product2.toString());
+		assertThat(listContents).containsExactly(product1.toString(), product2.toString());
 	}
-	
+
 	@Test
 	public void testShowErrorShouldShowTheMessageInTheErrorLabel() {
 		Product product = new Product("1", "test1");
 		shopSwingView.showError("error message", product);
-		window.label("errorMessageLabel")
-			.requireText("error message: " + product.getName());
+		window.label("errorMessageLabel").requireText("error message: " + product.getName());
 	}
-	
+
 	@Test
 	public void testShowErrorProductNotFoundWhenCheckout() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
-					listCartModel.addElement(product1);
-					listCartModel.addElement(product2);
-				}
-		);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+			listCartModel.addElement(product1);
+			listCartModel.addElement(product2);
+		});
 		shopSwingView.showErrorProductNotFound("error message", product1);
-		window.label("errorMessageLabel")
-			.requireText("error message: " + product1.getName());
-		assertThat(window.list("cartList").contents())
-			.containsExactly(product2.toString());
-		
+		window.label("errorMessageLabel").requireText("error message: " + product1.getName());
+		assertThat(window.list("cartList").contents()).containsExactly(product2.toString());
+
 	}
-	
+
 	@Test
 	public void testAddProductToCartShouldMoveTheProductFromProductListToCartListAndResetTheErrorLabel() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
-					listProductsModel.addElement(product1);
-					listProductsModel.addElement(product2);
-				}
-				);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
+			listProductsModel.addElement(product1);
+			listProductsModel.addElement(product2);
+		});
 		shopSwingView.addProductToCart(product1);
 		String[] productListContents = window.list("productList").contents();
 		assertThat(productListContents).containsExactly(product2.toString());
@@ -153,18 +143,16 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(cartListContents).containsExactly(product1.toString());
 		window.label("errorMessageLabel").requireText(" ");
 	}
-	
+
 	@Test
 	public void testRemoveProductFromCartShouldMoveTheProductFromCartListToProductListAndResetTheErrorLabel() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
-					listCartModel.addElement(product1);
-					listCartModel.addElement(product2);
-				}
-				);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+			listCartModel.addElement(product1);
+			listCartModel.addElement(product2);
+		});
 		shopSwingView.removeProductFromCart(product1);
 		String[] productListContents = window.list("productList").contents();
 		assertThat(productListContents).containsExactly(product1.toString());
@@ -172,88 +160,75 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(cartListContents).containsExactly(product2.toString());
 		window.label("errorMessageLabel").requireText(" ");
 	}
-	
 
 	@Test
 	public void testCheckoutProductShouldRemoveTheProductFromTheCartListAndResetTheErrorLabel() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
-					listCartModel.addElement(product1);
-					listCartModel.addElement(product2);
-				}
-		);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+			listCartModel.addElement(product1);
+			listCartModel.addElement(product2);
+		});
 		shopSwingView.checkoutProduct(new Product("1", "test1"));
 		String[] listContents = window.list("cartList").contents();
 		assertThat(listContents).containsExactly(product2.toString());
 		window.label("errorMessageLabel").requireText(" ");
 	}
-	
+
 	@Test
 	public void testRemoveProductFromShopShouldRemoveTheProductFromProductList() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
-					listProductsModel.addElement(product1);
-					listProductsModel.addElement(product2);
-				}
-				);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
+			listProductsModel.addElement(product1);
+			listProductsModel.addElement(product2);
+		});
 		shopSwingView.removeProductFromShop(new Product("1", "test1"));
 		String[] listContents = window.list("productList").contents();
 		assertThat(listContents).containsExactly(product2.toString());
 	}
-	
+
 	@Test
 	public void testAddButtonShouldDelegateToShopControllerBuyProduct() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
-					listProductsModel.addElement(product1);
-					listProductsModel.addElement(product2);
-				}
-				);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
+			listProductsModel.addElement(product1);
+			listProductsModel.addElement(product2);
+		});
 		window.list("productList").selectItem(1);
 		window.button(JButtonMatcher.withText("Buy Selected")).click();
 		verify(shopController).buyProduct(product2);
 	}
-	
+
 	@Test
 	public void testRemoveButtonShouldDelegateToShopControllerRemoveProduct() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
-					listCartModel.addElement(product1);
-					listCartModel.addElement(product2);
-				}
-				);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+			listCartModel.addElement(product1);
+			listCartModel.addElement(product2);
+		});
 		window.list("cartList").selectItem(1);
 		window.button(JButtonMatcher.withText("Remove Selected")).click();
 		verify(shopController).removeProduct(product2);
 	}
-	
+
 	@Test
 	public void testCheckoutButtonShouldDelegateToShopControllerCheckoutProduct() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
-					listCartModel.addElement(product1);
-					listCartModel.addElement(product2);
-				}
-				);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+			listCartModel.addElement(product1);
+			listCartModel.addElement(product2);
+		});
 		window.list("cartList").selectItem(1);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
-			verify(shopController).checkoutProduct(product2)
-			);
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> verify(shopController).checkoutProduct(product2));
 	}
 }

@@ -12,9 +12,9 @@ import com.mongodb.client.model.Filters;
 import com.mycompany.shopcart.model.Product;
 
 public class ProductMongoRepositoryInTransaction {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(ProductMongoRepositoryInTransaction.class);
-	
+
 	private MongoCollection<Document> productCollection;
 
 	public ProductMongoRepositoryInTransaction(MongoClient mongoClient,
@@ -33,15 +33,15 @@ public class ProductMongoRepositoryInTransaction {
 
 	public void delete(ClientSession session, String id) {
 		try {
-            productCollection.deleteOne(session, Filters.eq("id", id));
-        } catch (MongoCommandException e) {
-            LOGGER.error("Exception!", e);
-            throw e;
-        }
+			productCollection.deleteOne(session, Filters.eq("id", id));
+		} catch (MongoCommandException e) {
+			LOGGER.error("Exception!", e);
+			throw e;
+		}
 	}
-	
+
 	private Product fromDocumentToProduct(Document d) {
-		return new Product(""+d.get("id"), ""+d.get("name"));
+		return new Product("" + d.get("id"), "" + d.get("name"));
 	}
 
 }

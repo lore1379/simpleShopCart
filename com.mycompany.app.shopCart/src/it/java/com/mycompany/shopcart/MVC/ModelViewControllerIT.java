@@ -27,25 +27,25 @@ import com.mycompany.shopcart.view.swing.ShopSwingView;
 
 @RunWith(GUITestRunner.class)
 public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
-	
+
 	@ClassRule
 	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
-	
+
 	private MongoClient mongoClient;
 	private ProductMongoRepository productRepository;
 	private FrameFixture window;
 	private ShopSwingView shopSwingView;
 	private ShopController shopController;
 	private MongoCollection<Document> productCollection;
-	
+
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String PRODUCT_COLLECTION_NAME = "product";
-	
+
 	@Override
 	protected void onSetUp() {
 		mongoClient = new MongoClient(
 				new ServerAddress(
-						mongo.getContainerIpAddress(),
+						mongo.getContainerIpAddress(), 
 						mongo.getFirstMappedPort()));
 		productRepository = new ProductMongoRepository(mongoClient, SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
 		MongoDatabase database = mongoClient.getDatabase(SHOP_DB_NAME);
@@ -59,32 +59,27 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		}));
 		window.show();
 	}
-	
+
 	@Override
 	protected void onTearDown() {
 		mongoClient.close();
 	}
-	
+
 	@Test
 	public void testCheckout() {
 		Product product = new Product("99", "availableProduct");
 		addTestProductToDatabase(product.getId(), product.getName());
-		GuiActionRunner.execute(
-			() -> shopController.allProducts());
+		GuiActionRunner.execute(() -> shopController.allProducts());
 		window.list("productList").selectItem(0);
 		window.button(JButtonMatcher.withText("Buy Selected")).click();
 		window.list("cartList").selectItem(0);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
-			assertThat(productRepository.findById("99")).isNull()
-		);
+		await().atMost(5, TimeUnit.SECONDS)
+			.untilAsserted(() -> assertThat(productRepository.findById("99")).isNull());
 	}
-	
+
 	private void addTestProductToDatabase(String id, String name) {
-		productCollection.insertOne(
-				new Document()
-					.append("id", id)
-					.append("name", name));
+		productCollection.insertOne(new Document().append("id", id).append("name", name));
 	}
 
 }

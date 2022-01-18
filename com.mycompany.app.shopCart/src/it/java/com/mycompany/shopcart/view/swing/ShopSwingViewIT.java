@@ -29,11 +29,11 @@ import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
-public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
-	
+public class ShopSwingViewIT extends AssertJSwingJUnitTestCase {
+
 	private static MongoServer server;
 	private static InetSocketAddress serverAddress;
-	
+
 	private MongoClient mongoClient;
 	private ProductMongoRepository productRepository;
 	private ShopSwingView shopSwingView;
@@ -49,12 +49,12 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
 		server = new MongoServer(new MemoryBackend());
 		serverAddress = server.bind();
 	}
-	
+
 	@AfterClass
 	public static void shutdownServer() {
 		server.shutdown();
 	}
-	
+
 	@Override
 	protected void onSetUp() {
 		mongoClient = new MongoClient(new ServerAddress(serverAddress));
@@ -70,116 +70,106 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase{
 		});
 		window = new FrameFixture(robot(), shopSwingView);
 		window.show();
-	}	
-	
+	}
+
 	@Override
 	protected void onTearDown() {
 		mongoClient.close();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void testAllproducts() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
 		addTestProductToDatabase(product1.getId(), product1.getName());
 		addTestProductToDatabase(product2.getId(), product2.getName());
-		GuiActionRunner.execute(
-				() -> shopController.allProducts());
+		GuiActionRunner.execute(() -> shopController.allProducts());
 		assertThat(window.list("productList").contents())
 			.containsExactly(product1.toString(), product2.toString());
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void testBuyButtonSuccess() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
 		addTestProductToDatabase(product1.getId(), product1.getName());
 		addTestProductToDatabase(product2.getId(), product2.getName());
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
-					listProductsModel.addElement(product1);
-					listProductsModel.addElement(product2);
-				}
-		);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listProductsModel = shopSwingView.getListProductsModel();
+			listProductsModel.addElement(product1);
+			listProductsModel.addElement(product2);
+		});
 		window.list("productList").selectItem(1);
 		window.button(JButtonMatcher.withText("Buy Selected")).click();
 		assertThat(window.list("productList").contents())
 			.containsExactly(product1.toString());
 		assertThat(window.list("cartList").contents())
-		.containsExactly(product2.toString());
+			.containsExactly(product2.toString());
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void testBuyButtonError() {
 		Product product = new Product("1", "test1");
-		GuiActionRunner.execute(
-				() -> shopSwingView.getListProductsModel().addElement(product));
+		GuiActionRunner.execute(() -> shopSwingView.getListProductsModel().addElement(product));
 		window.list("productList").selectItem(0);
 		window.button(JButtonMatcher.withText("Buy Selected")).click();
-		window.label("errorMessageLabel").requireText("The product you are trying to buy is no longer available: " + product.getName());
-		assertThat(window.list("productList").contents())
-			.isEmpty();
+		window.label("errorMessageLabel")
+				.requireText("The product you are trying to buy is no longer available: " + product.getName());
+		assertThat(window.list("productList").contents()).isEmpty();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void testRemoveButton() {
 		Product product = new Product("1", "test1");
-		GuiActionRunner.execute(
-				() -> shopSwingView.getListCartModel().addElement(product));
+		GuiActionRunner.execute(() -> shopSwingView.getListCartModel().addElement(product));
 		window.list("cartList").selectItem(0);
 		window.button(JButtonMatcher.withText("Remove Selected")).click();
 		assertThat(window.list("productList").contents())
 			.containsExactly(product.toString());
-		assertThat(window.list("cartList").contents())
-			.isEmpty();
+		assertThat(window.list("cartList").contents()).isEmpty();
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void testCheckoutButtonSuccess() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
 		addTestProductToDatabase(product1.getId(), product1.getName());
 		addTestProductToDatabase(product2.getId(), product2.getName());
-		GuiActionRunner.execute(
-				() -> {
-					DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
-					listCartModel.addElement(product1);
-					listCartModel.addElement(product2);
-				}
-		);
+		GuiActionRunner.execute(() -> {
+			DefaultListModel<Product> listCartModel = shopSwingView.getListCartModel();
+			listCartModel.addElement(product1);
+			listCartModel.addElement(product2);
+		});
 		window.list("cartList").selectItem(1);
 		window.button(JButtonMatcher.withText("Checkout")).click();
 		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
-			assertThat(window.list("productList").contents())
-				.isEmpty();
-			assertThat(window.list("cartList").contents())
-			.containsExactly(product1.toString());
+			assertThat(window.list("productList").contents()).isEmpty();
+			assertThat(window.list("cartList").contents()).containsExactly(product1.toString());
 		});
 	}
-	
-	@Test @GUITest
+
+	@Test
+	@GUITest
 	public void testCheckoutButtonError() {
 		Product product = new Product("1", "test1");
-		GuiActionRunner.execute(
-				() -> shopSwingView.getListCartModel().addElement(product));
+		GuiActionRunner.execute(() -> shopSwingView.getListCartModel().addElement(product));
 		window.list("cartList").selectItem(0);
 		window.button(JButtonMatcher.withText("Checkout")).click();
 		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> {
 			window.label("errorMessageLabel")
-				.requireText("The product you are trying to buy is no longer available: " + product.getName());
-			assertThat(window.list("productList").contents())
-				.isEmpty();
-			assertThat(window.list("cartList").contents())
-				.isEmpty();
+					.requireText("The product you are trying to buy is no longer available: " + product.getName());
+			assertThat(window.list("productList").contents()).isEmpty();
+			assertThat(window.list("cartList").contents()).isEmpty();
 		});
 	}
-	
+
 	private void addTestProductToDatabase(String id, String name) {
-		productCollection.insertOne(
-				new Document()
-					.append("id", id)
-					.append("name", name));
+		productCollection.insertOne(new Document().append("id", id).append("name", name));
 	}
 
 }

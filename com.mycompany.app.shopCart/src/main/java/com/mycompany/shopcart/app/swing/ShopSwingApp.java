@@ -17,10 +17,10 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Command(mixinStandardHelpOptions = true)
-public class ShopSwingApp implements Callable<Void>{
-	
+public class ShopSwingApp implements Callable<Void> {
+
 	private static final Logger LOGGER = LogManager.getLogger(ShopSwingApp.class);
-	
+
 	@Option(names = { "--mongo-host" }, description = "MongoDB host address")
 	private String mongoHost = "localhost";
 
@@ -32,22 +32,25 @@ public class ShopSwingApp implements Callable<Void>{
 
 	@Option(names = { "--db-collection" }, description = "Collection name")
 	private String collectionName = "product";
-	
+
+	private ProductMongoRepository productRepository;
+
+	private ShopSwingView shopView;
+
+	private ShopController shopController;
+
 	public static void main(String[] args) {
 		new CommandLine(new ShopSwingApp()).execute(args);
 	}
-	
+
 	@Override
 	public Void call() throws Exception {
 		EventQueue.invokeLater(() -> {
 			try {
-				ProductMongoRepository productRepository =
-						new ProductMongoRepository(
-								new MongoClient(new ServerAddress(mongoHost, mongoPort)),
-										databaseName, collectionName);
-				ShopSwingView shopView = new ShopSwingView();
-				ShopController shopController =
-						new ShopController(shopView, productRepository);
+				productRepository = new ProductMongoRepository(
+						new MongoClient(new ServerAddress(mongoHost, mongoPort)), databaseName, collectionName);
+				shopView = new ShopSwingView();
+				shopController = new ShopController(shopView, productRepository);
 				shopView.setShopController(shopController);
 				shopView.setVisible(true);
 				shopController.allProducts();

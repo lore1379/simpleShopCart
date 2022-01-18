@@ -12,10 +12,10 @@ public interface ShopView {
 
 	void removeProductFromCart(Product product);
 
-	void showError(String message,Product product);
+	void showError(String message, Product product);
 
 	void checkoutProduct(Product product);
-	
+
 	void showErrorProductNotFound(String message, Product product);
 
 	void removeProductFromShop(Product productToBuy);

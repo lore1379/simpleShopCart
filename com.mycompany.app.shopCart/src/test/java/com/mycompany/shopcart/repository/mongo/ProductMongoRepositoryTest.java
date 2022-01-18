@@ -21,40 +21,39 @@ import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
 public class ProductMongoRepositoryTest {
-	
+
 	private static MongoServer server;
 	private static InetSocketAddress serverAddress;
-	
+
 	private static MongoClient client;
 	private ProductMongoRepository productRepository;
 	private MongoCollection<Document> productCollection;
-	
+
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String PRODUCT_COLLECTION_NAME = "product";
-	
+
 	@BeforeClass
 	public static void setupServer() {
 		server = new MongoServer(new MemoryBackend());
 		serverAddress = server.bind();
 	}
-	
+
 	@AfterClass
 	public static void shutdownServer() {
 		server.shutdown();
 	}
-	
+
 	@Before
 	public void setup() {
 		client = new MongoClient(new ServerAddress(serverAddress));
-		productRepository =
-				new ProductMongoRepository(client,
+		productRepository = 
+				new ProductMongoRepository(client, 
 						SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
 		MongoDatabase database = client.getDatabase(SHOP_DB_NAME);
-		// make sure we always start with a clean databas0e
 		database.drop();
 		productCollection = database.getCollection(PRODUCT_COLLECTION_NAME);
 	}
-	
+
 	@After
 	public void tearDown() {
 		client.close();
@@ -64,36 +63,36 @@ public class ProductMongoRepositoryTest {
 	public void testFindAllWhenDatabaseIsEmpty() {
 		assertThat(productRepository.findAll()).isEmpty();
 	}
-	
+
 	@Test
 	public void testFindAllWhenDatabaseIsNotEmpty() {
 		addTestProductToDatabase("1", "test1");
 		addTestProductToDatabase("2", "test2");
 		assertThat(productRepository.findAll())
 			.containsExactly(
-				new Product("1", "test1"),
-				new Product("2", "test2"));
+					new Product("1", "test1"), 
+					new Product("2", "test2"));
 	}
-	
+
 	@Test
 	public void testFindByIdNotFound() {
 		assertThat(productRepository.findById("1")).isNull();
 	}
-	
+
 	@Test
 	public void testFindByIdFound() {
 		addTestProductToDatabase("1", "test1");
 		addTestProductToDatabase("2", "test2");
 		assertThat(productRepository.findById("2")).isEqualTo(new Product("2", "test2"));
 	}
-	
+
 	@Test
 	public void testDelete() {
 		addTestProductToDatabase("1", "test1");
 		productRepository.delete("1");
 		assertThat(productCollection.find()).isEmpty();
 	}
-	
+
 	private void addTestProductToDatabase(String id, String name) {
 		productCollection.insertOne(new Document()
 				.append("id", id)

@@ -14,47 +14,50 @@ import com.mycompany.shopcart.repository.mongo.ProductMongoRepositoryInTransacti
 import com.mycompany.shopcart.view.ShopView;
 
 public class ShopControllerInTransaction {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(ShopControllerInTransaction.class);
 
 	private ShopView productView;
 	private ProductMongoRepositoryInTransaction productRepository;
 	private MongoClient mongoClient;
-	
-	public ShopControllerInTransaction (MongoClient mongoClient, ShopView productView, ProductMongoRepositoryInTransaction productRepository) {
+
+	public ShopControllerInTransaction(MongoClient mongoClient, ShopView productView,
+			ProductMongoRepositoryInTransaction productRepository) {
 		this.mongoClient = mongoClient;
 		this.productView = productView;
 		this.productRepository = productRepository;
 	}
-	
+
 	public void checkoutProduct(Product productInCart) {
 		ClientSession session = mongoClient.startSession();
 		try {
-            session.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).build());
-            final Product availableProduct = productRepository.findById(productInCart.getId());
-            if (availableProduct == null) {
-            	productView.showErrorProductNotFound("The product you are trying to buy is no longer available", productInCart);
-            	return;
-            }
-            productRepository.delete(session, availableProduct.getId());
-            productView.checkoutProduct(availableProduct);
-            sleep();
-            session.commitTransaction();
-        } catch (MongoCommandException | MongoWriteException e) {
-            session.abortTransaction();
-            productView.showErrorProductNotFound("The product you are trying to buy is no longer available", productInCart);
-        } finally {
-            session.close();
-        }
+			session.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).build());
+			final Product availableProduct = productRepository.findById(productInCart.getId());
+			if (availableProduct == null) {
+				productView.showErrorProductNotFound("The product you are trying to buy is no longer available",
+						productInCart);
+				return;
+			}
+			productRepository.delete(session, availableProduct.getId());
+			productView.checkoutProduct(availableProduct);
+			sleep();
+			session.commitTransaction();
+		} catch (MongoCommandException | MongoWriteException e) {
+			session.abortTransaction();
+			productView.showErrorProductNotFound("The product you are trying to buy is no longer available",
+					productInCart);
+		} finally {
+			session.close();
+		}
 	}
-	
+
 	private void sleep() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-        	LOGGER.error("Exception!", e);
-            Thread.currentThread().interrupt();
-        }
-    }
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			LOGGER.error("Exception!", e);
+			Thread.currentThread().interrupt();
+		}
+	}
 
 }
