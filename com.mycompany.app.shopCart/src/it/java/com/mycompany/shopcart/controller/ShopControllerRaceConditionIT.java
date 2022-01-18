@@ -70,15 +70,14 @@ public class ShopControllerRaceConditionIT extends AssertJSwingJUnitTestCase {
 		addTestProductToDatabase(product.getId(), product.getName());
 		List<Thread> threads = IntStream.range(0, 10)
 				.mapToObj(i -> new Thread(
-						() -> {
-							new ShopController(productView, productRepository).checkoutProduct(product);
-							})
-				)
+						() -> 
+						new ShopController(productView, productRepository).checkoutProduct(mongoClient, product)))
 				.peek(t -> t.start())
 				.collect(Collectors.toList());
 		await().atMost(10, TimeUnit.SECONDS)
 			.until(() -> threads.stream().noneMatch(t -> t.isAlive()));
 		verify(productView, times(1)).checkoutProduct(product);
+		verify(productView, times(9)).showErrorProductNotFound("The product you are trying to buy is no longer available", product);
 	}
 	
 	private void addTestProductToDatabase(String id, String name) {
