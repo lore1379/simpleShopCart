@@ -55,7 +55,7 @@ public class ShopController {
 			productRepository.delete(session, availableProduct.getId());
 			shopView.checkoutProduct(availableProduct);
 			session.commitTransaction();
-		} catch (MongoCommandException | MongoWriteException e) {
+		} catch (MongoCommandException e) {
 			session.abortTransaction();
 			shopView.showErrorProductNotFound("The product you are trying to buy is no longer available",
 					productInCart);
