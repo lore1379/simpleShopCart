@@ -54,7 +54,6 @@ public class ShopController {
 			}
 			productRepository.delete(session, availableProduct.getId());
 			shopView.checkoutProduct(availableProduct);
-			sleep();
 			session.commitTransaction();
 		} catch (MongoCommandException | MongoWriteException e) {
 			session.abortTransaction();
@@ -62,15 +61,6 @@ public class ShopController {
 					productInCart);
 		} finally {
 			session.close();
-		}
-	}
-
-	private void sleep() {
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			LOGGER.error("Exception!", e);
-			Thread.currentThread().interrupt();
 		}
 	}
 
