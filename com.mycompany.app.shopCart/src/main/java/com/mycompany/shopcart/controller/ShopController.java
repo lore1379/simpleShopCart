@@ -12,7 +12,9 @@ public class ShopController {
 	
 	private ShopView shopView;
 	private ProductRepository productRepository;
-
+	
+	private static final String ERROR_MESSAGE = "The product you are trying to buy is no longer available";
+	
 	public ShopController(ShopView productView, ProductRepository productRepository) {
 		this.shopView = productView;
 		this.productRepository = productRepository;
@@ -25,7 +27,7 @@ public class ShopController {
 	public void buyProduct(Product productToBuy) {
 		final Product availableProduct = productRepository.findById(productToBuy.getId());
 		if (availableProduct == null) {
-			shopView.showError("The product you are trying to buy is no longer available", productToBuy);
+			shopView.showError(ERROR_MESSAGE, productToBuy);
 			shopView.removeProductFromShop(productToBuy);
 			return;
 		}
@@ -42,7 +44,7 @@ public class ShopController {
 			session.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).build());
 			final Product availableProduct = productRepository.findById(productInCart.getId());
 			if (availableProduct == null) {
-				shopView.showErrorProductNotFound("The product you are trying to buy is no longer available",
+				shopView.showErrorProductNotFound(ERROR_MESSAGE,
 						productInCart);
 				return;
 			}
@@ -51,7 +53,7 @@ public class ShopController {
 			session.commitTransaction();
 		} catch (MongoCommandException e) {
 			session.abortTransaction();
-			shopView.showErrorProductNotFound("The product you are trying to buy is no longer available",
+			shopView.showErrorProductNotFound(ERROR_MESSAGE,
 					productInCart);
 		} finally {
 			session.close();
