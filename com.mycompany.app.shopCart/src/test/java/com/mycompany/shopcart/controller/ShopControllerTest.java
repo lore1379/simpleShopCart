@@ -84,9 +84,13 @@ public class ShopControllerTest {
 		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
 		when(productRepository.findById("1")).thenReturn(productInCart);
 		shopController.checkoutProduct(productInCart);
-		InOrder inOrder = inOrder(productRepository, shopView);
+		InOrder inOrder = inOrder(sessionMock, productRepository, shopView);
+		inOrder.verify(sessionMock).startTransaction(any());
 		inOrder.verify(productRepository).delete(sessionMock, "1");
 		inOrder.verify(shopView).checkoutProduct(productInCart);
+		inOrder.verify(sessionMock).commitTransaction();
+		inOrder.verify(sessionMock).close();
+
 	}
 
 	@Test
@@ -109,8 +113,11 @@ public class ShopControllerTest {
 		when(productRepository.findById("1")).thenReturn(productInCart);
 		doThrow(MongoCommandException.class).when(productRepository).delete(sessionMock, "1");
 		shopController.checkoutProduct(productInCart);
-		verify(shopView).showErrorProductNotFound("The product you are trying to buy is no longer available",
+		InOrder inOrder = inOrder(sessionMock, shopView);
+		inOrder.verify(sessionMock).abortTransaction();
+		inOrder.verify(shopView).showErrorProductNotFound("The product you are trying to buy is no longer available",
 				productInCart);
+		inOrder.verify(sessionMock).close();
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 	
