@@ -18,10 +18,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mycompany.shopcart.model.Product;
 
-public class ProductMongoRepositoryTest {
+public class ProductMongoRepositoryTestContainersTest {
 	
 	@ClassRule
-	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
+	public static final MongoDBContainer mongo = 
+		new MongoDBContainer("mongo:4.4.3");
 
 	private static MongoClient client;
 	private ProductMongoRepository productRepository;
