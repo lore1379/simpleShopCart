@@ -6,11 +6,14 @@ import static java.util.Arrays.asList;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mycompany.shopcart.model.Product;
@@ -19,6 +22,10 @@ import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 import com.mycompany.shopcart.view.ShopView;
 
 public class ShopControllerIT {
+	
+	@ClassRule
+	public static final MongoDBContainer mongo =
+			new MongoDBContainer("mongo:4.4.3");
 
 	@Mock
 	private ShopView shopView;
@@ -27,7 +34,7 @@ public class ShopControllerIT {
 
 	private ShopController shopController;
 
-	private MongoClient mongoClient;
+	private MongoClient client;
 
 	private AutoCloseable closeable;
 
@@ -36,16 +43,17 @@ public class ShopControllerIT {
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String PRODUCT_COLLECTION_NAME = "product";
 
-	private static int mongoPort = 
-			Integer.parseInt(System.getProperty("mongo.port", "27017"));
-
 	@Before
 	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
-		mongoClient = new MongoClient("localhost", mongoPort);
-		productRepository = new ProductMongoRepository(mongoClient, 
-				SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
-		MongoDatabase database = mongoClient.getDatabase(SHOP_DB_NAME);
+		client = new MongoClient(
+				new ServerAddress(
+					mongo.getContainerIpAddress(),
+					mongo.getMappedPort(27017)));
+		productRepository = 
+				new ProductMongoRepository(client, 
+						SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
+		MongoDatabase database = client.getDatabase(SHOP_DB_NAME);
 		database.drop();
 		shopController = new ShopController(shopView, productRepository);
 		productCollection = database.getCollection(PRODUCT_COLLECTION_NAME);
@@ -53,7 +61,7 @@ public class ShopControllerIT {
 
 	@After
 	public void tearDown() throws Exception {
-		mongoClient.close();
+		client.close();
 		closeable.close();
 	}
 

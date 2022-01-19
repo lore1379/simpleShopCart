@@ -18,7 +18,8 @@ import com.mycompany.shopcart.model.Product;
 public class ProductMongoRepositoryTestcontainersIT {
 
 	@ClassRule
-	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
+	public static final MongoDBContainer mongo = 
+		new MongoDBContainer("mongo:4.4.3");
 
 	private MongoClient client;
 	private ProductMongoRepository productRepository;
@@ -33,7 +34,9 @@ public class ProductMongoRepositoryTestcontainersIT {
 				new ServerAddress(
 						mongo.getContainerIpAddress(), 
 						mongo.getMappedPort(27017)));
-		productRepository = new ProductMongoRepository(client, SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
+		productRepository = 
+				new ProductMongoRepository(client, 
+						SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
 		MongoDatabase database = client.getDatabase(SHOP_DB_NAME);
 		database.drop();
 		productCollection = database.getCollection(PRODUCT_COLLECTION_NAME);
@@ -65,7 +68,7 @@ public class ProductMongoRepositoryTestcontainersIT {
 	@Test
 	public void testDelete() {
 		addTestProductToDatabase("1", "test1");
-		productRepository.delete("1");
+		productRepository.delete(productRepository.getNewClientSession(), "1");
 		assertThat(productCollection.find()).isEmpty();
 	}
 

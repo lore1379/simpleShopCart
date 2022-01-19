@@ -3,7 +3,6 @@ package com.mycompany.shopcart.view.swing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.*;
 
-import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.DefaultListModel;
@@ -14,9 +13,9 @@ import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.bson.Document;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
@@ -26,13 +25,11 @@ import com.mycompany.shopcart.controller.ShopController;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 
-import de.bwaldvogel.mongo.MongoServer;
-import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
-
 public class ShopSwingViewIT extends AssertJSwingJUnitTestCase {
 
-	private static MongoServer server;
-	private static InetSocketAddress serverAddress;
+	@ClassRule
+	public static final MongoDBContainer mongo = 
+		new MongoDBContainer("mongo:4.4.3");
 
 	private MongoClient mongoClient;
 	private ProductMongoRepository productRepository;
@@ -44,21 +41,16 @@ public class ShopSwingViewIT extends AssertJSwingJUnitTestCase {
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String PRODUCT_COLLECTION_NAME = "product";
 
-	@BeforeClass
-	public static void setupServer() {
-		server = new MongoServer(new MemoryBackend());
-		serverAddress = server.bind();
-	}
-
-	@AfterClass
-	public static void shutdownServer() {
-		server.shutdown();
-	}
-
 	@Override
 	protected void onSetUp() {
-		mongoClient = new MongoClient(new ServerAddress(serverAddress));
-		productRepository = new ProductMongoRepository(mongoClient, SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
+		mongoClient = 
+				new MongoClient(
+						new ServerAddress(
+								mongo.getContainerIpAddress(),
+								mongo.getMappedPort(27017)));
+		productRepository = 
+				new ProductMongoRepository(mongoClient, 
+						SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
 		MongoDatabase database = mongoClient.getDatabase(SHOP_DB_NAME);
 		database.drop();
 		productCollection = database.getCollection(PRODUCT_COLLECTION_NAME);
