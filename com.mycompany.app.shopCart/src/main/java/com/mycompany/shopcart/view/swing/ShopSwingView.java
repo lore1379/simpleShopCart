@@ -203,8 +203,8 @@ public class ShopSwingView extends JFrame implements ShopView {
 	}
 
 	@Override
-	public void removeProductFromShop(Product productToBuy) {
-		SwingUtilities.invokeLater(() -> listProductsModel.removeElement(productToBuy));
+	public void removeProductFromShop(Product product) {
+		SwingUtilities.invokeLater(() -> listProductsModel.removeElement(product));
 	}
 
 	private void resetErrorLabel() {
