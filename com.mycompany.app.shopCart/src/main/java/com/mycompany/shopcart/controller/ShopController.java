@@ -64,15 +64,7 @@ public class ShopController {
 			session.close();
 		}
 	}
-		/*final Product availableProduct = productRepository.findById(productInCart.getId());
-		if (availableProduct == null) {
-			shopView.showErrorProductNotFound("The product you are trying to buy is no longer available",
-					productInCart);
-			return;
-		}
-		productRepository.delete(availableProduct.getId());
-		shopView.checkoutProduct(availableProduct);
-	}*/
+
 	private void sleep() {
 		try {
 			Thread.sleep(3000);
