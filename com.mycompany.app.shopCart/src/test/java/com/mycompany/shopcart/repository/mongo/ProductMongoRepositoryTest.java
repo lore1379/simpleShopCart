@@ -2,14 +2,12 @@ package com.mycompany.shopcart.repository.mongo;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.net.InetSocketAddress;
-
 import org.bson.Document;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
@@ -17,13 +15,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mycompany.shopcart.model.Product;
 
-import de.bwaldvogel.mongo.MongoServer;
-import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
-
 public class ProductMongoRepositoryTest {
-
-	private static MongoServer server;
-	private static InetSocketAddress serverAddress;
+	
+	@ClassRule
+	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
 
 	private static MongoClient client;
 	private ProductMongoRepository productRepository;
@@ -32,20 +27,12 @@ public class ProductMongoRepositoryTest {
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String PRODUCT_COLLECTION_NAME = "product";
 
-	@BeforeClass
-	public static void setupServer() {
-		server = new MongoServer(new MemoryBackend());
-		serverAddress = server.bind();
-	}
-
-	@AfterClass
-	public static void shutdownServer() {
-		server.shutdown();
-	}
-
 	@Before
 	public void setup() {
-		client = new MongoClient(new ServerAddress(serverAddress));
+		client = new MongoClient(
+				new ServerAddress(
+						mongo.getContainerIpAddress(),
+						mongo.getMappedPort(27017)));
 		productRepository = 
 				new ProductMongoRepository(client, 
 						SHOP_DB_NAME, PRODUCT_COLLECTION_NAME);
@@ -83,19 +70,21 @@ public class ProductMongoRepositoryTest {
 	public void testFindByIdFound() {
 		addTestProductToDatabase("1", "test1");
 		addTestProductToDatabase("2", "test2");
-		assertThat(productRepository.findById("2")).isEqualTo(new Product("2", "test2"));
+		assertThat(productRepository.findById("2"))
+			.isEqualTo(new Product("2", "test2"));
 	}
 
 	@Test
 	public void testDelete() {
 		addTestProductToDatabase("1", "test1");
-		productRepository.delete("1");
+		productRepository.delete(productRepository.getNewClientSession(), "1");
 		assertThat(productCollection.find()).isEmpty();
 	}
 
 	private void addTestProductToDatabase(String id, String name) {
-		productCollection.insertOne(new Document()
-				.append("id", id)
-				.append("name", name));
+		productCollection.insertOne(
+				new Document()
+					.append("id", id)
+					.append("name", name));
 	}
 }

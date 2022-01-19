@@ -11,8 +11,10 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.mongodb.client.ClientSession;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.ProductRepository;
 import com.mycompany.shopcart.view.ShopView;
@@ -76,17 +78,21 @@ public class ShopControllerTest {
 
 	@Test
 	public void testCheckoutProductWhenProductIsInDatabase() {
+		ClientSession sessionMock = Mockito.mock(ClientSession.class);
 		Product productInCart = new Product("1", "test1");
+		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
 		when(productRepository.findById("1")).thenReturn(productInCart);
 		shopController.checkoutProduct(productInCart);
 		InOrder inOrder = inOrder(productRepository, shopView);
-		inOrder.verify(productRepository).delete("1");
+		inOrder.verify(productRepository).delete(sessionMock, "1");
 		inOrder.verify(shopView).checkoutProduct(productInCart);
 	}
 
 	@Test
 	public void testCheckoutProductWhenProductIsNotInDatabase() {
+		ClientSession sessionMock = Mockito.mock(ClientSession.class);
 		Product productInCart = new Product("1", "test");
+		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
 		when(productRepository.findById("1")).thenReturn(null);
 		shopController.checkoutProduct(productInCart);
 		verify(shopView).showErrorProductNotFound("The product you are trying to buy is no longer available",
