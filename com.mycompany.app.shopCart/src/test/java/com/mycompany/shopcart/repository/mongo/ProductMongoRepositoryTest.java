@@ -1,6 +1,8 @@
 package com.mycompany.shopcart.repository.mongo;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 
 import org.bson.Document;
 import org.junit.After;
@@ -10,6 +12,7 @@ import org.junit.Test;
 import org.testcontainers.containers.MongoDBContainer;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCommandException;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -79,6 +82,16 @@ public class ProductMongoRepositoryTest {
 		addTestProductToDatabase("1", "test1");
 		productRepository.delete(productRepository.getNewClientSession(), "1");
 		assertThat(productCollection.find()).isEmpty();
+	}
+	
+	@Test
+	public void testDeleteWhenExceptionIsThrown() {
+		productRepository = mock(ProductMongoRepository.class);
+		addTestProductToDatabase("1", "test1");
+		doThrow(MongoCommandException.class)
+			.when(productRepository)
+			.delete(productRepository.getNewClientSession(), "1");
+		assertThat(productCollection.find()).isNotEmpty();
 	}
 
 	private void addTestProductToDatabase(String id, String name) {
