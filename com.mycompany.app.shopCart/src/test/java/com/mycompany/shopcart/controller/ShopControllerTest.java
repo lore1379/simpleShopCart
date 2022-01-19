@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.mongodb.MongoWriteException;
 import com.mongodb.client.ClientSession;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.ProductRepository;
@@ -99,5 +100,18 @@ public class ShopControllerTest {
 				productInCart);
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
-
+	
+	@Test
+	public void testCheckoutProductWhenExceptionThrownInTransaction() {
+		ClientSession sessionMock = Mockito.mock(ClientSession.class);
+		Product productInCart = new Product("1", "test");
+		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
+		when(productRepository.findById("1")).thenReturn(productInCart);
+		doThrow(MongoWriteException.class).when(productRepository).delete(sessionMock, "1");
+		shopController.checkoutProduct(productInCart);
+		verify(shopView).showErrorProductNotFound("The product you are trying to buy is no longer available",
+				productInCart);
+		verifyNoMoreInteractions(ignoreStubs(productRepository));
+	}
+	
 }
