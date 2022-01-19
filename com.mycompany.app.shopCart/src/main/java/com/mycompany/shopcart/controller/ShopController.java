@@ -1,10 +1,6 @@
 package com.mycompany.shopcart.controller;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mongodb.MongoCommandException;
-import com.mongodb.MongoWriteException;
 import com.mongodb.TransactionOptions;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
@@ -14,8 +10,6 @@ import com.mycompany.shopcart.view.ShopView;
 
 public class ShopController {
 	
-	private static final Logger LOGGER = LogManager.getLogger(ShopController.class);
-
 	private ShopView shopView;
 	private ProductRepository productRepository;
 
