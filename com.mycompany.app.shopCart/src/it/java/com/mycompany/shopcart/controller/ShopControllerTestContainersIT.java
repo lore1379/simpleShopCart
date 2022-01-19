@@ -21,7 +21,7 @@ import com.mycompany.shopcart.repository.ProductRepository;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 import com.mycompany.shopcart.view.ShopView;
 
-public class ShopControllerIT {
+public class ShopControllerTestContainersIT {
 	
 	@ClassRule
 	public static final MongoDBContainer mongo =

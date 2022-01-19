@@ -25,7 +25,7 @@ import com.mycompany.shopcart.controller.ShopController;
 import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 
-public class ShopSwingViewIT extends AssertJSwingJUnitTestCase {
+public class ShopSwingViewTestContainersIT extends AssertJSwingJUnitTestCase {
 
 	@ClassRule
 	public static final MongoDBContainer mongo = 
