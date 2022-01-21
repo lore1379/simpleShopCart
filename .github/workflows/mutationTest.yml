@@ -21,5 +21,5 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven, Mutation Test
-      run: mvn verify -Pmutation-testing
+      run: xvfb-run mvn verify -Pmutation-testing
       working-directory: com.mycompany.app.shopCart
