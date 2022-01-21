@@ -360,7 +360,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<excludes>
-								<exclude>ProductMongoRepositoryTestContainersTest.java</exclude>
+								<exclude>**/*TestContainers*.java.java</exclude>
 							</excludes>
 						</configuration>
 					</plugin>
@@ -369,7 +369,7 @@
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<configuration>
 							<excludes>
-								<exclude>**/*Testcontainers*.java</exclude>
+								<exclude>**/*TestContainers*.java</exclude>
 							</excludes>
 						</configuration>
 						<executions>
