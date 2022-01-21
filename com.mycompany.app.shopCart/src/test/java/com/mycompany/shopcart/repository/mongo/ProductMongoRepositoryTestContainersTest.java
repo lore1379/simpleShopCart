@@ -92,13 +92,14 @@ public class ProductMongoRepositoryTestContainersTest {
 						.isNull();
 	}
 	
-	@Test
+	@Test(expected = MongoCommandException.class)
 	public void testDeleteWhenExceptionIsThrown() {
 		productRepository = mock(ProductMongoRepository.class);
 		addTestProductToDatabase("1", "test1");
 		doThrow(MongoCommandException.class)
 			.when(productRepository)
 			.delete(productRepository.getNewClientSession(), "1");
+		productRepository.delete(productRepository.getNewClientSession(), "1");
 		assertThat(productCollection.find()).isNotEmpty();
 	}
 
