@@ -3,7 +3,7 @@ package com.mycompany.shopcart.model;
 import java.util.Objects;
 
 public class Product {
-	
+
 	private String id;
 	private String name;
 
@@ -30,7 +30,7 @@ public class Product {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + "]";
@@ -55,6 +55,5 @@ public class Product {
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name);
 	}
-
 
 }
