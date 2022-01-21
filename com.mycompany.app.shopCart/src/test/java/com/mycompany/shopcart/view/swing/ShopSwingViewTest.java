@@ -191,7 +191,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	public void testAddButtonShouldDelegateToShopControllerBuyProduct() {
+	public void testBuyButtonShouldDelegateToShopControllerBuyProduct() {
 		Product product1 = new Product("1", "test1");
 		Product product2 = new Product("2", "test2");
 		GuiActionRunner.execute(() -> {
@@ -229,6 +229,7 @@ public class ShopSwingViewTest extends AssertJSwingJUnitTestCase {
 		});
 		window.list("cartList").selectItem(1);
 		window.button(JButtonMatcher.withText("Checkout")).click();
-		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() -> verify(shopController).checkoutProduct(product2));
+		await().atMost(5, TimeUnit.SECONDS)
+			.untilAsserted(() -> verify(shopController).checkoutProduct(product2));
 	}
 }

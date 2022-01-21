@@ -189,15 +189,19 @@
 					<version>1.5.2</version>
 					<configuration>
 						<targetClasses>
-							<!-- excludes model, not to be tested -->
 							<param>com.mycompany.shopcart.controller.ShopController*</param>
+							<param>com.mycompany.shopcart.repository.mongo.ProductMongoRepository*</param>
 						</targetClasses>
 						<targetTests>
 							<param>com.mycompany.shopcart.controller.ShopControllerTest*</param>
+							<param>com.mycompany.shopcart.repository.mongo.ProductMongoRepositoryTestContainersTest*</param>		
 						</targetTests>
+						<excludedTestClasses>
+							<param>com.mycompany.shopcart.controller.ShopControllerTestContainersIT*</param>
+							<param>com.mycompany.shopcart.view.swing.ShopSwingViewTestContainersIT*</param>
+						</excludedTestClasses> 
 						<mutators>
 							<mutator>DEFAULTS</mutator>
-							<mutator>NON_VOID_METHOD_CALLS</mutator>
 						</mutators>
 						<mutationThreshold>100</mutationThreshold>
 					</configuration>
