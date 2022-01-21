@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
+import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,7 +83,10 @@ public class ShopControllerTest {
 		ClientSession sessionMock = Mockito.mock(ClientSession.class);
 		Product productInCart = new Product("1", "test1");
 		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
-		when(productRepository.findById("1")).thenReturn(productInCart);
+		when(productRepository.delete(sessionMock, "1"))
+			.thenReturn(new Document()
+					.append("id", "1")
+					.append("name", "test1"));
 		shopController.checkoutProduct(productInCart);
 		InOrder inOrder = inOrder(sessionMock, productRepository, shopView);
 		inOrder.verify(sessionMock).startTransaction(any());
@@ -98,10 +102,15 @@ public class ShopControllerTest {
 		ClientSession sessionMock = Mockito.mock(ClientSession.class);
 		Product productInCart = new Product("1", "test");
 		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
-		when(productRepository.findById("1")).thenReturn(null);
+		when(productRepository.delete(sessionMock, "1")).thenReturn(null);
 		shopController.checkoutProduct(productInCart);
-		verify(shopView).showErrorProductNotFound("The product you are trying to buy is no longer available",
+		InOrder inOrder = inOrder(sessionMock, productRepository, shopView);
+		inOrder.verify(sessionMock).startTransaction(any());
+		inOrder.verify(productRepository).delete(sessionMock, "1");
+		inOrder.verify(shopView).showErrorProductNotFound("The product you are trying to buy is no longer available",
 				productInCart);
+		inOrder.verify(sessionMock).commitTransaction();
+		inOrder.verify(sessionMock).close();
 		verifyNoMoreInteractions(ignoreStubs(productRepository));
 	}
 	
@@ -110,10 +119,10 @@ public class ShopControllerTest {
 		ClientSession sessionMock = Mockito.mock(ClientSession.class);
 		Product productInCart = new Product("1", "test");
 		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
-		when(productRepository.findById("1")).thenReturn(productInCart);
 		doThrow(MongoCommandException.class).when(productRepository).delete(sessionMock, "1");
 		shopController.checkoutProduct(productInCart);
-		InOrder inOrder = inOrder(sessionMock, shopView);
+		InOrder inOrder = inOrder(sessionMock, productRepository, shopView);
+		inOrder.verify(productRepository).delete(sessionMock, "1");
 		inOrder.verify(sessionMock).abortTransaction();
 		inOrder.verify(shopView).showErrorProductNotFound("The product you are trying to buy is no longer available",
 				productInCart);
