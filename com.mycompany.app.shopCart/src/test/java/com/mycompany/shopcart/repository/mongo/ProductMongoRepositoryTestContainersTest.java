@@ -79,10 +79,17 @@ public class ProductMongoRepositoryTestContainersTest {
 	}
 
 	@Test
-	public void testDelete() {
+	public void testDeleteWhenProductIsInDatabase() {
 		addTestProductToDatabase("1", "test1");
-		productRepository.delete(productRepository.getNewClientSession(), "1");
+		assertThat(productRepository.delete(productRepository.getNewClientSession(), "1"))
+						.isNotNull();
 		assertThat(productCollection.find()).isEmpty();
+	}
+	
+	@Test
+	public void testDeleteWhenProductIsNotInDatabase() {
+		assertThat(productRepository.delete(productRepository.getNewClientSession(), "1"))
+						.isNull();
 	}
 	
 	@Test
