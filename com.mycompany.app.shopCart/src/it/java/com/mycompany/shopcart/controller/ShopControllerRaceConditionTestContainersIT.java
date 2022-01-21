@@ -9,13 +9,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.assertj.swing.annotation.GUITest;
-import org.assertj.swing.junit.runner.GUITestRunner;
-import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.bson.Document;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testcontainers.containers.MongoDBContainer;
@@ -28,11 +26,11 @@ import com.mycompany.shopcart.model.Product;
 import com.mycompany.shopcart.repository.mongo.ProductMongoRepository;
 import com.mycompany.shopcart.view.ShopView;
 
-@RunWith(GUITestRunner.class)
-public class ShopControllerRaceConditionTestContainersIT extends AssertJSwingJUnitTestCase {
+public class ShopControllerRaceConditionTestContainersIT {
 
 	@ClassRule
-	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
+	public static final MongoDBContainer mongo = 
+		new MongoDBContainer("mongo:4.4.3").withCommand(("--replSet rs0"));
 
 	@Mock
 	private ShopView shopView;
@@ -45,8 +43,8 @@ public class ShopControllerRaceConditionTestContainersIT extends AssertJSwingJUn
 	private static final String SHOP_DB_NAME = "shop";
 	private static final String PRODUCT_COLLECTION_NAME = "product";
 
-	@Override
-	protected void onSetUp() {
+	@Before
+	public void setup() {
 		closeable = MockitoAnnotations.openMocks(this);
 		mongoClient = new MongoClient(
 				new ServerAddress(
@@ -59,14 +57,13 @@ public class ShopControllerRaceConditionTestContainersIT extends AssertJSwingJUn
 		productCollection = database.getCollection(PRODUCT_COLLECTION_NAME);
 	}
 
-	@Override
-	protected void onTearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		mongoClient.close();
 		closeable.close();
 	}
 
 	@Test
-	@GUITest
 	public void testCheckoutWithConcurrentThreadsOnlyOneShouldCheckout() {
 		Product product = new Product("1", "test");
 		addTestProductToDatabase(product.getId(), product.getName());
@@ -79,9 +76,8 @@ public class ShopControllerRaceConditionTestContainersIT extends AssertJSwingJUn
 				.collect(Collectors.toList());
 		await().atMost(10, TimeUnit.SECONDS)
 		.until(() -> threads.stream().noneMatch(t -> t.isAlive()));
-		verify(shopView, times(1)).checkoutProduct(product);
-		verify(shopView, times(9))
-				.showErrorProductNotFound("The product you are trying to buy is no longer available", product);
+		verify(shopView, times(9)).showErrorProductNotFound("The product you are trying to buy is no longer available", product);;
+		
 	}
 
 	private void addTestProductToDatabase(String id, String name) {

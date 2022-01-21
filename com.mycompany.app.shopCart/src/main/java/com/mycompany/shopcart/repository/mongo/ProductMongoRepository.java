@@ -10,6 +10,7 @@ import org.bson.Document;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCommandException;
+
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -49,9 +50,9 @@ public class ProductMongoRepository implements ProductRepository {
 	}
 
 	@Override
-	public void delete(ClientSession session, String id) {
+	public Document delete(ClientSession session, String id) {
 		try {
-			productCollection.deleteOne(session, Filters.eq("id", id));
+			return productCollection.findOneAndDelete(session, Filters.eq("id", id)); 
 		} catch (MongoCommandException e) {
 			LOGGER.error("Exception!", e);
 			throw e;

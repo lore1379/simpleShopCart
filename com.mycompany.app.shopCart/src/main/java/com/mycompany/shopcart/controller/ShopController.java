@@ -1,5 +1,7 @@
 package com.mycompany.shopcart.controller;
 
+import org.bson.Document;
+
 import com.mongodb.MongoCommandException;
 import com.mongodb.TransactionOptions;
 import com.mongodb.WriteConcern;
@@ -40,17 +42,17 @@ public class ShopController {
 
 	public void checkoutProduct(Product productInCart) {
 		ClientSession session = productRepository.getNewClientSession();
+		session.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).build());
 		try {
-			session.startTransaction(TransactionOptions.builder().writeConcern(WriteConcern.MAJORITY).build());
-			final Product availableProduct = productRepository.findById(productInCart.getId());
+			Document availableProduct = productRepository.delete(session, productInCart.getId());
 			if (availableProduct == null) {
 				shopView.showErrorProductNotFound(ERROR_MESSAGE,
 						productInCart);
-				return;
+				session.commitTransaction();
+			} else {
+				shopView.checkoutProduct(productInCart);
+				session.commitTransaction();			
 			}
-			productRepository.delete(session, availableProduct.getId());
-			shopView.checkoutProduct(availableProduct);
-			session.commitTransaction();
 		} catch (MongoCommandException e) {
 			session.abortTransaction();
 			shopView.showErrorProductNotFound(ERROR_MESSAGE,
