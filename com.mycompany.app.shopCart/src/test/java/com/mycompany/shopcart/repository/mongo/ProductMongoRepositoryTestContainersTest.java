@@ -3,7 +3,6 @@ package com.mycompany.shopcart.repository.mongo;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -14,8 +13,10 @@ import org.testcontainers.containers.MongoDBContainer;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCommandException;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mycompany.shopcart.model.Product;
 
 public class ProductMongoRepositoryTestContainersTest {
@@ -94,13 +95,13 @@ public class ProductMongoRepositoryTestContainersTest {
 	
 	@Test(expected = MongoCommandException.class)
 	public void testDeleteWhenExceptionIsThrown() {
-		productRepository = mock(ProductMongoRepository.class);
-		addTestProductToDatabase("1", "test1");
-		doThrow(MongoCommandException.class)
-			.when(productRepository)
-			.delete(productRepository.getNewClientSession(), "1");
-		productRepository.delete(productRepository.getNewClientSession(), "1");
-		assertThat(productCollection.find()).isNotEmpty();
+		@SuppressWarnings("unchecked")
+		MongoCollection<Document> mockCollection = mock(MongoCollection.class);
+		ClientSession session = productRepository.getNewClientSession();
+		doThrow(MongoCommandException.class).when(mockCollection).findOneAndDelete(session, Filters.eq("id", "1"));
+		productRepository.setProductCollection(mockCollection);
+		productRepository.delete(session, "1");
+
 	}
 
 	private void addTestProductToDatabase(String id, String name) {
