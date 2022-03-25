@@ -26,10 +26,10 @@ public class ProductMongoRepository implements ProductRepository {
 
 	public ProductMongoRepository(MongoClient mongoClient, 
 			String shopDbName, String productCollectionName) {
-				productCollection = mongoClient
-						.getDatabase(shopDbName)
-						.getCollection(productCollectionName);
-				this.mongoClient = mongoClient;
+		productCollection = mongoClient
+				.getDatabase(shopDbName)
+				.getCollection(productCollectionName);
+		this.mongoClient = mongoClient;
 	}
 	
 
@@ -62,6 +62,10 @@ public class ProductMongoRepository implements ProductRepository {
 	@Override
 	public ClientSession getNewClientSession() {
 		return mongoClient.startSession();
+	}
+	
+	public void setProductCollection(MongoCollection<Document> productCollection) {
+		this.productCollection = productCollection;
 	}
 	
 	private Product fromDocumentToProduct(Document d) {
