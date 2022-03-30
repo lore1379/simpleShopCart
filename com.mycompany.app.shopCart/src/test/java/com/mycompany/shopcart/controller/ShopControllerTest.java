@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.mongodb.MongoCommandException;
@@ -80,7 +79,7 @@ public class ShopControllerTest {
 
 	@Test
 	public void testCheckoutProductWhenProductIsInDatabase() {
-		ClientSession sessionMock = Mockito.mock(ClientSession.class);
+		ClientSession sessionMock = mock(ClientSession.class);
 		Product productInCart = new Product("1", "test1");
 		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
 		when(productRepository.delete(sessionMock, "1"))
@@ -99,7 +98,7 @@ public class ShopControllerTest {
 
 	@Test
 	public void testCheckoutProductWhenProductIsNotInDatabase() {
-		ClientSession sessionMock = Mockito.mock(ClientSession.class);
+		ClientSession sessionMock = mock(ClientSession.class);
 		Product productInCart = new Product("1", "test");
 		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
 		when(productRepository.delete(sessionMock, "1")).thenReturn(null);
@@ -116,7 +115,7 @@ public class ShopControllerTest {
 	
 	@Test
 	public void testCheckoutProductWhenExceptionThrownInTransaction() {
-		ClientSession sessionMock = Mockito.mock(ClientSession.class);
+		ClientSession sessionMock = mock(ClientSession.class);
 		Product productInCart = new Product("1", "test");
 		when(productRepository.getNewClientSession()).thenReturn(sessionMock);
 		doThrow(MongoCommandException.class).when(productRepository).delete(sessionMock, "1");
