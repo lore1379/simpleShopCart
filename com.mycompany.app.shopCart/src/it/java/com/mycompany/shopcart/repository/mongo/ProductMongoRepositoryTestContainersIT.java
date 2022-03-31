@@ -19,7 +19,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mycompany.shopcart.model.Product;
 
-public class ProductMongoRepositoryTestContainersTest {
+public class ProductMongoRepositoryTestContainersIT {
 	
 	@ClassRule
 	public static final MongoDBContainer mongo = 
